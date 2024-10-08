@@ -24,8 +24,15 @@ public class Postinumero {
     public Postinumero() {
     }
 
-    public Postinumero(String postitoimipaikka) {
+    public Postinumero(String postinumero, String postitoimipaikka) {
+        this.postinumero = postinumero;
         this.postitoimipaikka = postitoimipaikka;
+    }
+
+    public Postinumero(String postinumero, String postitoimipaikka, List<Asiakas> asiakkaat) {
+        this.postinumero = postinumero;
+        this.postitoimipaikka = postitoimipaikka;
+        this.asiakkaat = asiakkaat;
     }
 
     public String getPostinumero() {
@@ -54,7 +61,8 @@ public class Postinumero {
 
     @Override
     public String toString() {
-        return "Postinumero [postinumero=" + postinumero + ", postitoimipaikka=" + postitoimipaikka + "]";
+        return "Postinumero [postinumero=" + postinumero + ", postitoimipaikka=" + postitoimipaikka + ", asiakkaat="
+                + asiakkaat + "]";
     }
 
 }

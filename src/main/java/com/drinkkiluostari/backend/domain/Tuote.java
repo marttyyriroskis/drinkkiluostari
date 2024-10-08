@@ -1,19 +1,25 @@
 package com.drinkkiluostari.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table(name = "tuotteet")
 public class Tuote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String nimi;
     private double hinta;
@@ -22,20 +28,30 @@ public class Tuote {
     @JoinColumn(name = "kategoria_id")
     private Kategoria kategoria;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tuote")
+    @JsonIgnore
+    private List<Tilausrivi> tilausrivit;
+
     public Tuote() {
     }
 
-    public Tuote(String nimi, double hinta, Kategoria kategoria) {
+    public Tuote(String nimi, double hinta) {
+        this.nimi = nimi;
+        this.hinta = hinta;
+    }
+
+    public Tuote(String nimi, double hinta, Kategoria kategoria, List<Tilausrivi> tilausrivit) {
         this.nimi = nimi;
         this.hinta = hinta;
         this.kategoria = kategoria;
+        this.tilausrivit = tilausrivit;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -63,9 +79,18 @@ public class Tuote {
         this.kategoria = kategoria;
     }
 
+    public List<Tilausrivi> getTilausrivit() {
+        return tilausrivit;
+    }
+
+    public void setTilausrivit(List<Tilausrivi> tilausrivit) {
+        this.tilausrivit = tilausrivit;
+    }
+    
     @Override
     public String toString() {
-        return "Tuote [id=" + id + ", nimi=" + nimi + ", hinta=" + hinta + ", kategoria=" + kategoria + "]";
+        return "Tuote [id=" + id + ", nimi=" + nimi + ", hinta=" + hinta + ", kategoria=" + kategoria + ", tilausrivit="
+                + tilausrivit + "]";
     }
 
 }

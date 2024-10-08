@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 public class Tilausrivi {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private double hinta, alennus;
     private int maara;
@@ -27,6 +27,12 @@ public class Tilausrivi {
     private Tilaus tilaus;
 
     public Tilausrivi() {
+    }
+
+    public Tilausrivi(double hinta, double alennus, int maara) {
+        this.hinta = hinta;
+        this.alennus = alennus;
+        this.maara = maara;
     }
 
     public Tilausrivi(double hinta, double alennus, int maara, Tuote tuote, Tilaus tilaus) {
@@ -77,11 +83,11 @@ public class Tilausrivi {
         this.tilaus = tilaus;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

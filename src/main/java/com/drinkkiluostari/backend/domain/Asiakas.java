@@ -1,19 +1,25 @@
 package com.drinkkiluostari.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table(name = "asiakkaat")
 public class Asiakas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String nimi, katuosoite, y_tunnus;
 
@@ -21,21 +27,32 @@ public class Asiakas {
     @JoinColumn(name = "postinumero")
     private Postinumero postinumero;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "asiakas")
+    @JsonIgnore
+    private List<Tilaus> tilaukset;
+
     public Asiakas() {
     }
 
-    public Asiakas(String nimi, String katuosoite, String y_tunnus, Postinumero postinumero) {
+    public Asiakas(String nimi, String katuosoite, String y_tunnus) {
+        this.nimi = nimi;
+        this.katuosoite = katuosoite;
+        this.y_tunnus = y_tunnus;
+    }
+
+    public Asiakas(String nimi, String katuosoite, String y_tunnus, Postinumero postinumero, List<Tilaus> tilaukset) {
         this.nimi = nimi;
         this.katuosoite = katuosoite;
         this.y_tunnus = y_tunnus;
         this.postinumero = postinumero;
+        this.tilaukset = tilaukset;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -71,10 +88,18 @@ public class Asiakas {
         this.postinumero = postinumero;
     }
 
+    public List<Tilaus> getTilaukset() {
+        return tilaukset;
+    }
+
+    public void setTilaukset(List<Tilaus> tilaukset) {
+        this.tilaukset = tilaukset;
+    }    
+
     @Override
     public String toString() {
         return "Asiakas [id=" + id + ", nimi=" + nimi + ", katuosoite=" + katuosoite + ", y_tunnus=" + y_tunnus
-                + ", postinumero=" + postinumero + "]";
+                + ", postinumero=" + postinumero + ", tilaukset=" + tilaukset + "]";
     }
 
 }

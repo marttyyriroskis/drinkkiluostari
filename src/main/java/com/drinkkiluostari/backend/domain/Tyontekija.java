@@ -1,19 +1,25 @@
 package com.drinkkiluostari.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table(name = "tyontekijat")
 public class Tyontekija {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String etunimi, sukunimi, sahkoposti, salasana;
 
@@ -21,24 +27,37 @@ public class Tyontekija {
     @JoinColumn(name = "rooli_id")
     private Rooli rooli;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tyontekija")
+    @JsonIgnore
+    private List<Tilaus> tilaukset;
+
     public Tyontekija() {
         // TODO: Generate sahkoposti from etunimi + sukunimi
     }
 
-    public Tyontekija(String etunimi, String sukunimi, String sahkoposti, String salasana, Rooli rooli) {
+    public Tyontekija(String etunimi, String sukunimi, String sahkoposti, String salasana) {
         // TODO: Generate sahkoposti from etunimi + sukunimi
         this.etunimi = etunimi;
         this.sukunimi = sukunimi;
         this.sahkoposti = sahkoposti;
         this.salasana = salasana;
-        this.rooli = rooli;
     }
 
-    public long getId() {
+    public Tyontekija(String etunimi, String sukunimi, String sahkoposti, String salasana, Rooli rooli,
+            List<Tilaus> tilaukset) {
+        this.etunimi = etunimi;
+        this.sukunimi = sukunimi;
+        this.sahkoposti = sahkoposti;
+        this.salasana = salasana;
+        this.rooli = rooli;
+        this.tilaukset = tilaukset;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -82,10 +101,18 @@ public class Tyontekija {
         this.rooli = rooli;
     }
 
+    public List<Tilaus> getTilaukset() {
+        return tilaukset;
+    }
+
+    public void setTilaukset(List<Tilaus> tilaukset) {
+        this.tilaukset = tilaukset;
+    }
+    
     @Override
     public String toString() {
         return "Tyontekija [id=" + id + ", etunimi=" + etunimi + ", sukunimi=" + sukunimi + ", sahkoposti=" + sahkoposti
-                + ", salasana=" + salasana + ", rooli=" + rooli + "]";
+                + ", salasana=" + salasana + ", rooli=" + rooli + ", tilaukset=" + tilaukset + "]";
     }
 
 }

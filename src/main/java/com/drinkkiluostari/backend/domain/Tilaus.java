@@ -2,20 +2,26 @@ package com.drinkkiluostari.backend.domain;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table(name = "tilaukset")
 public class Tilaus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private LocalDateTime pvm;
 
@@ -27,20 +33,29 @@ public class Tilaus {
     @JoinColumn(name = "asiakas_id")
     private Asiakas asiakas;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tilaus")
+    @JsonIgnore
+    private List<Tilausrivi> tilausrivit;
+
     public Tilaus() {
     }
 
-    public Tilaus(LocalDateTime pvm, Tyontekija tyontekija, Asiakas asiakas) {
+    public Tilaus(LocalDateTime pvm) {
+        this.pvm = pvm;
+    }
+
+    public Tilaus(LocalDateTime pvm, Tyontekija tyontekija, Asiakas asiakas, List<Tilausrivi> tilausrivit) {
         this.pvm = pvm;
         this.tyontekija = tyontekija;
         this.asiakas = asiakas;
+        this.tilausrivit = tilausrivit;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -68,9 +83,18 @@ public class Tilaus {
         this.asiakas = asiakas;
     }
 
+    public List<Tilausrivi> getTilausrivit() {
+        return tilausrivit;
+    }
+
+    public void setTilausrivit(List<Tilausrivi> tilausrivit) {
+        this.tilausrivit = tilausrivit;
+    }
+    
     @Override
     public String toString() {
-        return "Tilaus [id=" + id + ", pvm=" + pvm + ", tyontekija=" + tyontekija + ", asiakas=" + asiakas + "]";
+        return "Tilaus [id=" + id + ", pvm=" + pvm + ", tyontekija=" + tyontekija + ", asiakas=" + asiakas
+                + ", tilausrivit=" + tilausrivit + "]";
     }
 
 }
