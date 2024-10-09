@@ -1,0 +1,31 @@
+/* General page styling */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  color: #333;
+}
+
+/* Style for the welcome text */
+p {
+  font-size: 1.2em;
+  margin: 20px 0;
+}
+
+/* Hover effect for links */
+a:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Container to center content */
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}

@@ -28,12 +28,12 @@ import com.drinkkiluostari.backend.repository.TuoteRepository;
 import com.drinkkiluostari.backend.repository.TyontekijaRepository;
 
 @SpringBootApplication
-public class BackendApplication {
+public class DrinkkiluostariApplication {
 
-	private static final Logger log = LoggerFactory.getLogger(BackendApplication.class);
+	private static final Logger log = LoggerFactory.getLogger(DrinkkiluostariApplication.class);
 
 	public static void main(String[] args) {
-		SpringApplication.run(BackendApplication.class, args);
+		SpringApplication.run(DrinkkiluostariApplication.class, args);
 	}
 
 	@Bean
