@@ -40,7 +40,6 @@ public class BackendApplication {
 	public CommandLineRunner demo(AsiakasRepository asiakasRepository, KategoriaRepository kategoriaRepository, PostinumeroRepository
 	postinumeroRepository, RooliRepository rooliRepository, TilausRepository tilausRepository, TilausriviRepository tilausRiviRepository,
 	TuoteRepository tuoteRepository, TyontekijaRepository tyontekijaRepository) {
-		// TODO: Make test entries with max constructors
 		return (args) -> {
 			log.info("Creating asiakas test entries");
 			asiakasRepository.save(new Asiakas("Asiakas", "Asiakkaankatu 1", "333"));
@@ -73,6 +72,56 @@ public class BackendApplication {
 			log.info("Creating tyontekija test entries");
 			tyontekijaRepository.save(new Tyontekija("Juha", "Juhanen", "juha.juhanen@sahkoposti.fi", "kayttaja"));
 			tyontekijaRepository.save(new Tyontekija("Marja", "Marjanen", "marja.marjanen@sahkoposti.fi", "admin"));
+
+			log.info("Adding relationships...");
+			Asiakas asiakas1 = asiakasRepository.findById(1L).get();
+			Asiakas asiakas2 = asiakasRepository.findById(2L).get();
+			asiakas1.setPostinumero(postinumeroRepository.findByPostinumero("00100"));
+			asiakas2.setPostinumero(postinumeroRepository.findByPostinumero("01600"));
+			asiakasRepository.save(asiakas1);
+			asiakasRepository.save(asiakas2);
+
+			Tilaus tilaus1 = tilausRepository.findById(1L).get();
+			Tilaus tilaus2 = tilausRepository.findById(2L).get();
+			tilaus1.setTyontekija(tyontekijaRepository.findById(1L).get());
+			tilaus2.setTyontekija(tyontekijaRepository.findById(2L).get());
+			tilaus1.setAsiakas(asiakas1);
+			tilaus2.setAsiakas(asiakas2);
+			tilausRepository.save(tilaus1);
+			tilausRepository.save(tilaus2);
+
+			Tilausrivi tilausrivi1 = tilausRiviRepository.findById(1L).get();
+			Tilausrivi tilausrivi2 = tilausRiviRepository.findById(2L).get();
+			tilausrivi1.setTuote(tuoteRepository.findById(1L).get());
+			tilausrivi2.setTuote(tuoteRepository.findById(2L).get());
+			tilausrivi1.setTilaus(tilaus1);
+			tilausrivi2.setTilaus(tilaus2);
+			tilausRiviRepository.save(tilausrivi1);
+			tilausRiviRepository.save(tilausrivi2);
+
+			Kategoria kategoria1 = kategoriaRepository.findById(1L).get();
+			Kategoria kategoria2 = kategoriaRepository.findById(2L).get();
+			kategoriaRepository.save(kategoria1);
+			kategoriaRepository.save(kategoria2);
+
+			Tuote tuote1 = tuoteRepository.findById(1L).get();
+			Tuote tuote2 = tuoteRepository.findById(2L).get();
+			tuote1.setKategoria(kategoria1);
+			tuote2.setKategoria(kategoria2);
+			tuoteRepository.save(tuote1);
+			tuoteRepository.save(tuote2);
+
+			Rooli rooli1 = rooliRepository.findById(1L).get();
+			Rooli rooli2 = rooliRepository.findById(2L).get();
+			rooliRepository.save(rooli1);
+			rooliRepository.save(rooli2);
+
+			Tyontekija tyontekija1 = tyontekijaRepository.findById(1L).get();
+			Tyontekija tyontekija2 = tyontekijaRepository.findById(2L).get();
+			tyontekija1.setRooli(rooli1);
+			tyontekija2.setRooli(rooli2);
+			tyontekijaRepository.save(tyontekija1);
+			tyontekijaRepository.save(tyontekija2);
 		};
 	}
 
