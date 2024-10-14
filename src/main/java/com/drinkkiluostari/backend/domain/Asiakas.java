@@ -98,7 +98,7 @@ public class Asiakas {
 
     @Override
     public String toString() {
-        return "Asiakas [id=" + id + ", nimi=" + nimi + ", katuosoite=" + katuosoite + ", y_tunnus=" + yTunnus
+        return "Asiakas [id=" + id + ", nimi=" + nimi + ", katuosoite=" + katuosoite + ", yTunnus=" + yTunnus
                 + ", postinumero=" + postinumero + ", tilaukset=" + tilaukset + "]";
     }
 

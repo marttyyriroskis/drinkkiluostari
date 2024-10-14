@@ -4,7 +4,7 @@
 <head>
     <title>Muokkaa työntekijän tietoja</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="/css/edit-styles.css" />
+    <link rel="stylesheet" type="text/css" href="/css/edit-and-new-styles.css" />
 </head>
 
 <body>
@@ -36,16 +36,18 @@
                 <div th:if="${#fields.hasErrors('salasana')}" th:errors="*{salasana}">Error</div>
             </div>
 
-            <div style="clear: both; display: block; height: 10px;"></div>
-            <label for="rooliList">Roolit</label>
-            <select id="rooliList" th:field="*{rooli}" class="form-control">
-                <option th:each="rooli: ${roolit}" th:value="${rooli.id}"
-                    th:text="${rooli.rooli}">
-                </option>
-            </select>
-            <div style="clear: both; display: block; height: 10px;"></div>
+            <div>
+                <label for="rooliList">Roolit</label>
+                <select id="rooliList" th:field="*{rooli.id}" class="form-control">
+                    <option th:each="rooli: ${roolit}" th:value="${rooli.id}"
+                        th:text="${rooli.nimi}">
+                    </option>
+                </select>
+            </div>
 
-            <input type="submit" value="Tallenna muutokset"></input>
+            <div>
+                <input type="submit" value="Tallenna muutokset"></input>
+            </div>
         </form>
 
     </div>

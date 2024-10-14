@@ -31,66 +31,71 @@ public class AsiakasController {
     }
 
     // Get asiakkaat
-    @GetMapping("asiakasList")
+    @GetMapping("/asiakasList")
     public String getAsiakkaat(Model model) {
         model.addAttribute("asiakkaat", asiakasRepository.findAll());
-        return "asiakasList";
+        return "/asiakasList";
     }
 
     // Add new asiakas
     //@PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("asiakasNew")
+    @GetMapping("/asiakasNew")
     public String newAsiakas(Model model) {
         model.addAttribute("asiakas", new Asiakas());
         model.addAttribute("postinumerot", postinumeroRepository.findAll());
         model.addAttribute("tilaukset", tilausRepository.findAll());
-        return "asiakasNew";
+        return "/asiakasNew";
     }
 
     // Save a new asiakas
     //@PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("asiakasSave")
+    @PostMapping("/asiakasSave")
     public String saveAsiakas(@Valid @ModelAttribute("asiakas") Asiakas asiakas, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("asiakasEdit", asiakas);
             model.addAttribute("postinumerot", postinumeroRepository.findAll());
             model.addAttribute("tilaukset", tilausRepository.findAll());
-            return "asiakasNew";
+            return "/asiakasNew";
         }
         asiakasRepository.save(asiakas);
-        return "redirect:asiakasList";
+        return "redirect:/asiakasList";
     }
 
     // Edit asiakas
     //@PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("asiakasEdit/{id}")
+    @GetMapping("/asiakasEdit/{id}")
     public String editAsiakas(@PathVariable("id") Long id, Model model) {
         model.addAttribute("asiakasEdit", asiakasRepository.findById(id));
         model.addAttribute("postinumerot", postinumeroRepository.findAll());
         model.addAttribute("tilaukset", tilausRepository.findAll());
-        return "asiakasEdit";
+        return "/asiakasEdit";
     }
 
     // Save an edited asiakas
     //@PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("asiakasSaveEdited")
+    @PostMapping("/asiakasSaveEdited")
     public String saveEditedAsiakas(@Valid @ModelAttribute("asiakas") Asiakas asiakas, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("asiakasEdit", asiakas);
             model.addAttribute("postinumerot", postinumeroRepository.findAll());
             model.addAttribute("tilaukset", tilausRepository.findAll());
-            return "asiakasEdit";
+            return "/asiakasEdit";
         }
+
+        if (asiakas.getPostinumero() != null && asiakas.getPostinumero().getId() == null) {
+            postinumeroRepository.save(asiakas.getPostinumero());
+        }
+
         asiakasRepository.save(asiakas);
-        return "redirect:asiakasList";
+        return "redirect:/asiakasList";
     }
 
     // Delete asiakas
     //@PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("asiakasDelete/{id}")
+    @GetMapping("/asiakasDelete/{id}")
     public String deleteAsiakas(@PathVariable("id") Long id, Model model) {
         asiakasRepository.deleteById(id);
-        return "redirect:asiakasList";
+        return "redirect:/asiakasList";
     }
 
 }

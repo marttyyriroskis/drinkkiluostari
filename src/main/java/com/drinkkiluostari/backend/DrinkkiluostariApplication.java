@@ -76,8 +76,8 @@ public class DrinkkiluostariApplication {
 			log.info("Adding relationships...");
 			Asiakas asiakas1 = asiakasRepository.findById(1L).get();
 			Asiakas asiakas2 = asiakasRepository.findById(2L).get();
-			asiakas1.setPostinumero(postinumeroRepository.findByPostinumero("00100"));
-			asiakas2.setPostinumero(postinumeroRepository.findByPostinumero("01600"));
+			asiakas1.setPostinumero(postinumeroRepository.findById(1L).get());
+			asiakas2.setPostinumero(postinumeroRepository.findById(2L).get());
 			asiakasRepository.save(asiakas1);
 			asiakasRepository.save(asiakas2);
 

@@ -4,7 +4,7 @@
 <head>
     <title>Muokkaa asiakkaan tietoja</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="/css/edit-styles.css" />
+    <link rel="stylesheet" type="text/css" href="/css/edit-and-new-styles.css" />
 </head>
 
 <body>
@@ -28,16 +28,19 @@
                 <div th:if="${#fields.hasErrors('yTunnus')}" th:errors="*{yTunnus}">Error</div>
             </div>
 
-            <div style="clear: both; display: block; height: 10px;"></div>
-            <label for="postinumeroList">Postinumerot</label>
-            <select id="postinumeroList" th:field="*{postinumero}" class="form-control">
-                <option th:each="postinumero: ${postinumerot}" th:value="${postinumero.postinumero}"
-                    th:text="${postinumero.postitoimipaikka}">
-                </option>
-            </select>
-            <div style="clear: both; display: block; height: 10px;"></div>
+            <div>
+                <label for="postinumeroList">Postinumero</label>
+                <select id="postinumeroList" th:field="*{postinumero.id}" class="form-control">
+                    <option th:each="postinumero: ${postinumerot}" 
+                            th:value="${postinumero.id}" 
+                            th:text="${postinumero.postitoimipaikka}">
+                    </option>
+                </select>
+            </div>
 
-            <input type="submit" value="Tallenna muutokset"></input>
+            <div>
+                <input type="submit" value="Tallenna muutokset"></input>
+            </div>
         </form>
 
     </div>

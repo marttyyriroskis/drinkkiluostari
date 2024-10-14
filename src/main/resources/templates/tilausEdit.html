@@ -4,7 +4,7 @@
 <head>
     <title>Muokkaa tilauksen tietoja</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="/css/edit-styles.css" />
+    <link rel="stylesheet" type="text/css" href="/css/edit-and-new-styles.css" />
 </head>
 
 <body>
@@ -18,25 +18,27 @@
                 <div th:if="${#fields.hasErrors('pvm')}" th:errors="*{pvm}">Error</div>
             </div>
 
-            <div style="clear: both; display: block; height: 10px;"></div>
-            <label for="tyontekijaList">Työntekijät</label>
-            <select id="tyontekijaList" th:field="*{tyontekija}" class="form-control">
-                <option th:each="tyontekija: ${tyontekijat}" th:value="${tyontekija.id}"
-                    th:text="${tyontekija.sukunimi}">
-                </option>
-            </select>
-            <div style="clear: both; display: block; height: 10px;"></div>
+            <div>
+                <label for="tyontekijaList">Työntekijät</label>
+                <select id="tyontekijaList" th:field="*{tyontekija.id}" class="form-control">
+                    <option th:each="tyontekija: ${tyontekijat}" th:value="${tyontekija.id}"
+                        th:text="${tyontekija.sukunimi}">
+                    </option>
+                </select>
+            </div>
 
-            <div style="clear: both; display: block; height: 10px;"></div>
-            <label for="asiakasList">Asiakkaat</label>
-            <select id="asiakasList" th:field="*{asiakas}" class="form-control">
-                <option th:each="asiakas: ${asiakkaat}" th:value="${asiakas.id}"
-                    th:text="${asiakas.nimi}">
-                </option>
-            </select>
-            <div style="clear: both; display: block; height: 10px;"></div>
+            <div>
+                <label for="asiakasList">Asiakkaat</label>
+                <select id="asiakasList" th:field="*{asiakas.id}" class="form-control">
+                    <option th:each="asiakas: ${asiakkaat}" th:value="${asiakas.id}"
+                        th:text="${asiakas.nimi}">
+                    </option>
+                </select>
+            </div>
 
-            <input type="submit" value="Tallenna muutokset"></input>
+            <div>
+                <input type="submit" value="Tallenna muutokset"></input>
+            </div>
         </form>
 
     </div>

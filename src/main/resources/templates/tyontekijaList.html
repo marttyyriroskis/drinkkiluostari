@@ -27,10 +27,10 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
     <table>
       <tr>
+        <th>ID</th>
         <th>Etunimi</th>
         <th>Sukunimi</th>
         <th>Sähköposti</th>
-        <th>Salasana</th>
         <th>Rooli</th>
 <!--
         <th sec:authorize="hasAuthority('ADMIN')"> </th>
@@ -41,8 +41,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
         <td th:text="${tyontekija.etunimi}"></td>
         <td th:text="${tyontekija.sukunimi}"></td>
         <td th:text="${tyontekija.sahkoposti}"></td>
-        <td th:text="${tyontekija.salasana}"></td>
-        <td th:text="${tyontekija.rooli.rooli}"></td></td>
+        <td th:text="${tyontekija.rooli.nimi}"></td></td>
         <!--<td sec:authorize="hasAuthority('ADMIN')">--><a th:href="@{/tyontekijaDelete/{id}(id=${tyontekija.id})}">Poista</a></td>
         <!--<td sec:authorize="hasAuthority('ADMIN')">--><a th:href="@{/tyontekijaEdit/{id}(id=${tyontekija.id})}">Muokkaa</a></td>
       </tr>

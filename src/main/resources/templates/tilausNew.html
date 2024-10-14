@@ -4,13 +4,13 @@
 <head>
     <title>Uusi tilaus</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="/css/new-styles.css" />
+    <link rel="stylesheet" type="text/css" href="/css/edit-and-new-styles.css" />
 </head>
 
 <body>
     <h1>Lisää uusi tilaus</h1>
     <div>
-        <form action="#" th:object="${tilaus}" th:action="@{tilausSave}" method="post">
+        <form action="#" th:object="${tilaus}" th:action="@{/tilausSave}" method="post">
             <div>
                 <label>Päivämäärä</label>
                 <input type="datetime-local" th:field="*{pvm}" />
@@ -25,17 +25,18 @@
                 </option>
             </select>
 
-            <div style="clear: both; display: block; height: 10px;"></div>
-            <label for="asiakasList">Asiakas</label>
-            <select id="asiakasList" th:field="*{asiakas}" class="form-control">
-                <option th:each="asiakas: ${asiakkaat}" th:value="${asiakas.id}"
-                    th:text="${asiakas.nimi}">
-                </option>
-            </select>
+            <div>
+                <label for="asiakasList">Asiakas</label>
+                <select id="asiakasList" th:field="*{asiakas}" class="form-control">
+                    <option th:each="asiakas: ${asiakkaat}" th:value="${asiakas.id}"
+                        th:text="${asiakas.nimi}">
+                    </option>
+                </select>
+            </div>
 
-            <div style="clear: both; display: block; height: 10px;"></div>
-
-            <input type="submit" value="Tallenna"></input>
+            <div>
+                <input type="submit" value="Tallenna"></input>
+            </div>
         </form>
 
     </div>

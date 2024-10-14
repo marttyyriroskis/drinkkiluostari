@@ -31,66 +31,71 @@ public class TuoteController {
     }
 
     // Get tuotteet
-    @GetMapping("tuoteList")
+    @GetMapping("/tuoteList")
     public String getTuotteet(Model model) {
         model.addAttribute("tuotteet", tuoteRepository.findAll());
-        return "tuoteList";
+        return "/tuoteList";
     }
 
     // Add new tuote
     //@PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("tuoteNew")
+    @GetMapping("/tuoteNew")
     public String newTuote(Model model) {
         model.addAttribute("tuote", new Tuote());
         model.addAttribute("kategoriat", kategoriaRepository.findAll());
         model.addAttribute("tilausrivit", tilausriviRepository.findAll());
-        return "tuoteNew";
+        return "/tuoteNew";
     }
 
     // Save a new tuote
     //@PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("tuoteSave")
+    @PostMapping("/tuoteSave")
     public String saveTuote(@Valid @ModelAttribute("tuote") Tuote tuote, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("tuoteEdit", tuote);
             model.addAttribute("kategoriat", kategoriaRepository.findAll());
             model.addAttribute("tilausrivit", tilausriviRepository.findAll());
-            return "tuoteNew";
+            return "/tuoteNew";
         }
         tuoteRepository.save(tuote);
-        return "redirect:tuoteList";
+        return "redirect:/tuoteList";
     }
 
     // Edit tuote
     //@PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("tuoteEdit/{id}")
+    @GetMapping("/tuoteEdit/{id}")
     public String editTuote(@PathVariable("id") Long id, Model model) {
         model.addAttribute("tuoteEdit", tuoteRepository.findById(id));
         model.addAttribute("kategoriat", kategoriaRepository.findAll());
         model.addAttribute("tilausrivit", tilausriviRepository.findAll());
-        return "tuoteEdit";
+        return "/tuoteEdit";
     }
 
     // Save an edited tuote
     //@PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("tuoteSaveEdited")
+    @PostMapping("/tuoteSaveEdited")
     public String saveEditedTuote(@Valid @ModelAttribute("tuote") Tuote tuote, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("tuoteEdit", tuote);
             model.addAttribute("kategoriat", kategoriaRepository.findAll());
             model.addAttribute("tilausrivit", tilausriviRepository.findAll());
-            return "tuoteEdit";
+            return "/tuoteEdit";
         }
+
+        if (tuote.getKategoria() != null && tuote.getKategoria().getId() == null) {
+            kategoriaRepository.save(tuote.getKategoria());
+        }
+
         tuoteRepository.save(tuote);
-        return "redirect:tuoteList";
+        return "redirect:/tuoteList";
     }
 
     // Delete tuote
     //@PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("tuoteDelete/{id}")
+    @GetMapping("/tuoteDelete/{id}")
     public String deleteTuote(@PathVariable("id") Long id, Model model) {
         tuoteRepository.deleteById(id);
-        return "redirect:tuoteList";
+        return "redirect:/tuoteList";
     }
 
 }

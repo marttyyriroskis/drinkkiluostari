@@ -27,6 +27,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
     <table>
       <tr>
+        <th>ID</th>
         <th>Nimi</th>
         <th>Katuosoite</th>
         <th>Y-tunnus</th>
@@ -40,9 +41,9 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
         <td th:text="${asiakas.nimi}"></td>
         <td th:text="${asiakas.katuosoite}"></td>
         <td th:text="${asiakas.yTunnus}"></td>
-        <td th:text="${asiakas.postinumero.postinumero}"></td></td>
-        <!--<td sec:authorize="hasAuthority('ADMIN')">--><a th:href="@{/asiakasDelete/{id}(id=${asiakas.id})}">Poista</a></td>
-        <!--<td sec:authorize="hasAuthority('ADMIN')">--><a th:href="@{/asiakasEdit/{id}(id=${asiakas.id})}">Muokkaa</a></td>
+        <td th:text="${asiakas.postinumero.postinumero}"></td>
+        <td><a th:href="@{/asiakasDelete/{id}(id=${asiakas.id})}">Poista</a></td>
+        <td><a th:href="@{/asiakasEdit/{id}(id=${asiakas.id})}">Muokkaa</a></td>
       </tr>
     </table>
 

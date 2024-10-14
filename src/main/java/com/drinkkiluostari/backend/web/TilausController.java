@@ -35,70 +35,75 @@ public class TilausController {
     }
 
     // Get tilaukset
-    @GetMapping("tilausList")
+    @GetMapping("/tilausList")
     public String getTilaukset(Model model) {
         model.addAttribute("tilaukset", tilausRepository.findAll());
-        return "tilausList";
+        return "/tilausList";
     }
 
     // Add new tilaus
     //@PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("tilausNew")
+    @GetMapping("/tilausNew")
     public String newTilaus(Model model) {
         model.addAttribute("asiakas", new Tilaus());
         model.addAttribute("asiakkaat", asiakasRepository.findAll());
         model.addAttribute("tyontekijat", tyontekijaRepository.findAll());
         model.addAttribute("tilausrivit", tilausriviRepository.findAll());
-        return "tilausNew";
+        return "/tilausNew";
     }
 
     // Save a new tilaus
     //@PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("tilausSave")
+    @PostMapping("/tilausSave")
     public String saveTilaus(@Valid @ModelAttribute("tilaus") Tilaus tilaus, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("tilausEdit", tilaus);
             model.addAttribute("asiakkaat", asiakasRepository.findAll());
             model.addAttribute("tyontekijat", tyontekijaRepository.findAll());
             model.addAttribute("tilausrivit", tilausriviRepository.findAll());
-            return "tilausNew";
+            return "/tilausNew";
         }
         tilausRepository.save(tilaus);
-        return "redirect:tilausList";
+        return "redirect:/tilausList";
     }
 
     // Edit tilaus
     //@PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("tilausEdit/{id}")
+    @GetMapping("/tilausEdit/{id}")
     public String editTilaus(@PathVariable("id") Long id, Model model) {
         model.addAttribute("tilausEdit", tilausRepository.findById(id));
         model.addAttribute("asiakkaat", asiakasRepository.findAll());
         model.addAttribute("tyontekijat", tyontekijaRepository.findAll());
         model.addAttribute("tilausrivit", tilausriviRepository.findAll());
-        return "tilausEdit";
+        return "/tilausEdit";
     }
 
     // Save an edited tilaus
     //@PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("tilausSaveEdited")
+    @PostMapping("/tilausSaveEdited")
     public String saveEditedTilaus(@Valid @ModelAttribute("tilaus") Tilaus tilaus, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("tilausEdit", tilaus);
             model.addAttribute("asiakkaat", asiakasRepository.findAll());
             model.addAttribute("tyontekijat", tyontekijaRepository.findAll());
             model.addAttribute("tilausrivit", tilausriviRepository.findAll());
-            return "tilausEdit";
+            return "/tilausEdit";
         }
+        
+        if (tilaus.getAsiakas() != null && tilaus.getAsiakas().getId() == null) {
+            asiakasRepository.save(tilaus.getAsiakas());
+        }
+
         tilausRepository.save(tilaus);
-        return "redirect:tilausList";
+        return "redirect:/tilausList";
     }
 
     // Delete tilaus
     //@PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("tilausDelete/{id}")
+    @GetMapping("/tilausDelete/{id}")
     public String deleteTilaus(@PathVariable("id") Long id, Model model) {
         tilausRepository.deleteById(id);
-        return "redirect:tilausList";
+        return "redirect:/tilausList";
     }
 
 }

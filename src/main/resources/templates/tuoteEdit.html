@@ -4,7 +4,7 @@
 <head>
     <title>Muokkaa tuotteen tietoja</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="/css/edit-styles.css" />
+    <link rel="stylesheet" type="text/css" href="/css/edit-and-new-styles.css" />
 </head>
 
 <body>
@@ -24,16 +24,18 @@
                 <div th:if="${#fields.hasErrors('hinta')}" th:errors="*{hinta}">Error</div>
             </div>
 
-            <div style="clear: both; display: block; height: 10px;"></div>
-            <label for="kategoriaList">Kategoriat</label>
-            <select id="kategoriaList" th:field="*{kategoria}" class="form-control">
-                <option th:each="kategoria: ${kategoriat}" th:value="${kategoria.id}"
-                    th:text="${kategoria.nimi}">
-                </option>
-            </select>
-            <div style="clear: both; display: block; height: 10px;"></div>
+            <div>
+                <label for="kategoriaList">Kategoriat</label>
+                <select id="kategoriaList" th:field="*{kategoria.id}" class="form-control">
+                    <option th:each="kategoria: ${kategoriat}" th:value="${kategoria.id}"
+                        th:text="${kategoria.nimi}">
+                    </option>
+                </select>
+            </div>
 
-            <input type="submit" value="Tallenna muutokset"></input>
+            <div>
+                <input type="submit" value="Tallenna muutokset"></input>
+            </div>
         </form>
 
     </div>

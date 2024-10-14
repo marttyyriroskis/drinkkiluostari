@@ -19,7 +19,7 @@ public class Rooli {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String rooli;
+    private String nimi;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rooli")
     @JsonIgnore
@@ -28,8 +28,8 @@ public class Rooli {
     public Rooli() {
     }
 
-    public Rooli(String rooli) {
-        this.rooli = rooli;
+    public Rooli(String nimi) {
+        this.nimi = nimi;
     }
 
     public Long getId() {
@@ -40,12 +40,12 @@ public class Rooli {
         this.id = id;
     }
 
-    public String getRooli() {
-        return rooli;
+    public String getNimi() {
+        return nimi;
     }
 
-    public void setRooli(String rooli) {
-        this.rooli = rooli;
+    public void setNimi(String nimi) {
+        this.nimi = nimi;
     }
     
     public List<Tyontekija> getTyontekijat() {
@@ -58,7 +58,7 @@ public class Rooli {
 
     @Override
     public String toString() {
-        return "Rooli [id=" + id + ", rooli=" + rooli + "]";
+        return "Rooli [id=" + id + ", nimi=" + nimi + "]";
     }
 
 }

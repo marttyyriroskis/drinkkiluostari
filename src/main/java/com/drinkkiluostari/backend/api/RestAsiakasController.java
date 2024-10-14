@@ -56,12 +56,12 @@ public class RestAsiakasController {
     // Post a new asiakas
     @PostMapping("")
     public Asiakas newAsiakas(@Valid @RequestBody Asiakas asiakas) {
-        if (asiakas.getPostinumero() != null && asiakas.getPostinumero().getPostinumero() == null) {
+        if (asiakas.getPostinumero() != null && asiakas.getPostinumero().getId() == null) {
             asiakas.setPostinumero(null);
         }
 
         if (asiakas.getPostinumero() != null) {
-            Optional<Postinumero> existingPostinumero = postinumeroRepository.findById(asiakas.getPostinumero().getPostinumero());
+            Optional<Postinumero> existingPostinumero = postinumeroRepository.findById(asiakas.getPostinumero().getId());
             if (!existingPostinumero.isPresent()) {
                 throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST, "Postinumero does not exist!");
@@ -95,7 +95,7 @@ public class RestAsiakasController {
 
         Postinumero editedPostinumero = editedAsiakas.getPostinumero();
         if (editedPostinumero != null) {
-            Optional<Postinumero> existingPostinumero = postinumeroRepository.findById(editedPostinumero.getPostinumero());
+            Optional<Postinumero> existingPostinumero = postinumeroRepository.findById(editedPostinumero.getId());
             if (!existingPostinumero.isPresent()) {
                 throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST, "Invalid postinumero");

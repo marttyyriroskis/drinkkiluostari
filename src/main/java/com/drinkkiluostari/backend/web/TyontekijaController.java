@@ -31,66 +31,71 @@ public class TyontekijaController {
     }
 
     // Get työntekijät
-    @GetMapping("tyontekijaList")
+    @GetMapping("/tyontekijaList")
     public String getTyontekijat(Model model) {
         model.addAttribute("tyontekijat", tyontekijaRepository.findAll());
-        return "tyontekijaList";
+        return "/tyontekijaList";
     }
 
     // Add new työntekijä
     //@PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("tyontekijaNew")
+    @GetMapping("/tyontekijaNew")
     public String newTyontekija(Model model) {
         model.addAttribute("tyontekija", new Tyontekija());
         model.addAttribute("roolit", rooliRepository.findAll());
         model.addAttribute("tilaukset", tilausRepository.findAll());
-        return "tyontekijaNew";
+        return "/tyontekijaNew";
     }
 
     // Save a new työntekijä
     //@PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("tyontekijaSave")
+    @PostMapping("/tyontekijaSave")
     public String saveTyontekija(@Valid @ModelAttribute("tyontekija") Tyontekija tyontekija, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("tyontekijaEdit", tyontekija);
             model.addAttribute("roolit", rooliRepository.findAll());
             model.addAttribute("tilaukset", tilausRepository.findAll());
-            return "tyontekijaNew";
+            return "/tyontekijaNew";
         }
         tyontekijaRepository.save(tyontekija);
-        return "redirect:tyontekijaList";
+        return "redirect:/tyontekijaList";
     }
 
     // Edit työntekijä
     //@PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("tyontekijaEdit/{id}")
+    @GetMapping("/tyontekijaEdit/{id}")
     public String editTyontekija(@PathVariable("id") Long id, Model model) {
         model.addAttribute("tyontekijaEdit", tyontekijaRepository.findById(id));
         model.addAttribute("roolit", rooliRepository.findAll());
         model.addAttribute("tilaukset", tilausRepository.findAll());
-        return "tyontekijaEdit";
+        return "/tyontekijaEdit";
     }
 
     // Save an edited työntekijä
     //@PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("tyontekijaSaveEdited")
+    @PostMapping("/tyontekijaSaveEdited")
     public String saveEditedTyontekija(@Valid @ModelAttribute("tyontekija") Tyontekija tyontekija, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("tyontekijaEdit", tyontekija);
             model.addAttribute("roolit", rooliRepository.findAll());
             model.addAttribute("tilaukset", tilausRepository.findAll());
-            return "tyontekijaEdit";
+            return "/tyontekijaEdit";
         }
+
+        if (tyontekija.getRooli() != null && tyontekija.getRooli().getId() == null) {
+            rooliRepository.save(tyontekija.getRooli());
+        }
+
         tyontekijaRepository.save(tyontekija);
-        return "redirect:tyontekijaList";
+        return "redirect:/tyontekijaList";
     }
 
     // Delete työntekijä
     //@PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("tyontekijaDelete/{id}")
+    @GetMapping("/tyontekijaDelete/{id}")
     public String deleteTyontekija(@PathVariable("id") Long id, Model model) {
         tyontekijaRepository.deleteById(id);
-        return "redirect:tyontekijaList";
+        return "redirect:/tyontekijaList";
     }
 
 }

@@ -4,13 +4,13 @@
 <head>
     <title>Uusi työntekijä</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="/css/new-styles.css" />
+    <link rel="stylesheet" type="text/css" href="/css/edit-and-new-styles.css" />
 </head>
 
 <body>
     <h1>Lisää uusi työntekijä</h1>
     <div>
-        <form action="#" th:object="${tyontekija}" th:action="@{tyontekijaSave}" method="post">
+        <form action="#" th:object="${tyontekija}" th:action="@{/tyontekijaSave}" method="post">
             <div>
                 <label>Etunimi</label>
                 <input type="text" th:field="*{etunimi}" />
@@ -35,17 +35,18 @@
                 <div th:if="${#fields.hasErrors('salasana')}" th:errors="*{salasana}">Error</div>
             </div>
 
-            <div style="clear: both; display: block; height: 10px;"></div>
-            <label for="rooliList">Rooli</label>
-            <select id="rooliList" th:field="*{rooli}" class="form-control">
-                <option th:each="rooli: ${roolit}" th:value="${rooli.id}"
-                    th:text="${rooli.rooli}">
-                </option>
-            </select>
+            <div>
+                <label for="rooliList">Rooli</label>
+                <select id="rooliList" th:field="*{rooli}" class="form-control">
+                    <option th:each="rooli: ${roolit}" th:value="${rooli.id}"
+                        th:text="${rooli.nimi}">
+                    </option>
+                </select>
+            </div>
 
-            <div style="clear: both; display: block; height: 10px;"></div>
-
-            <input type="submit" value="Tallenna"></input>
+            <div>
+                <input type="submit" value="Tallenna"></input>
+            </div>
         </form>
 
     </div>

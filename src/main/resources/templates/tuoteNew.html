@@ -4,13 +4,13 @@
 <head>
     <title>Uusi tuote</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="/css/new-styles.css" />
+    <link rel="stylesheet" type="text/css" href="/css/edit-and-new-styles.css" />
 </head>
 
 <body>
     <h1>Lisää uusi tuote</h1>
     <div>
-        <form action="#" th:object="${tuote}" th:action="@{tuoteSave}" method="post">
+        <form action="#" th:object="${tuote}" th:action="@{/tuoteSave}" method="post">
             <div>
                 <label>Nimi</label>
                 <input type="text" th:field="*{nimi}" />
@@ -23,17 +23,18 @@
                 <div th:if="${#fields.hasErrors('hinta')}" th:errors="*{hinta}">Error</div>
             </div>
 
-            <div style="clear: both; display: block; height: 10px;"></div>
-            <label for="kategoriaList">Kategoria</label>
-            <select id="kategoriaList" th:field="*{kategoria}" class="form-control">
-                <option th:each="kategoria: ${kategoriat}" th:value="${kategoria.id}"
-                    th:text="${kategoria.nimi}">
-                </option>
-            </select>
+            <div>
+                <label for="kategoriaList">Kategoria</label>
+                <select id="kategoriaList" th:field="*{kategoria}" class="form-control">
+                    <option th:each="kategoria: ${kategoriat}" th:value="${kategoria.id}"
+                        th:text="${kategoria.nimi}">
+                    </option>
+                </select>
+            </div>
 
-            <div style="clear: both; display: block; height: 10px;"></div>
-
-            <input type="submit" value="Tallenna"></input>
+            <div>
+                <input type="submit" value="Tallenna"></input>
+            </div>
         </form>
 
     </div>

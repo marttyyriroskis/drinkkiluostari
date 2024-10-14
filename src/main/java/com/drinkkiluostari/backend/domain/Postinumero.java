@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -14,8 +16,10 @@ import jakarta.persistence.Table;
 @Table(name = "postinumerot")
 public class Postinumero {
     @Id
-    private String postinumero;
-    private String postitoimipaikka;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String postinumero, postitoimipaikka;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postinumero")
     @JsonIgnore
@@ -29,10 +33,12 @@ public class Postinumero {
         this.postitoimipaikka = postitoimipaikka;
     }
 
-    public Postinumero(String postinumero, String postitoimipaikka, List<Asiakas> asiakkaat) {
-        this.postinumero = postinumero;
-        this.postitoimipaikka = postitoimipaikka;
-        this.asiakkaat = asiakkaat;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getPostinumero() {
@@ -61,8 +67,8 @@ public class Postinumero {
 
     @Override
     public String toString() {
-        return "Postinumero [postinumero=" + postinumero + ", postitoimipaikka=" + postitoimipaikka + ", asiakkaat="
-                + asiakkaat + "]";
+        return "Postinumero [id=" + id + ", postinumero=" + postinumero + ", postitoimipaikka=" + postitoimipaikka
+                + ", asiakkaat=" + asiakkaat + "]";
     }
-
+    
 }
