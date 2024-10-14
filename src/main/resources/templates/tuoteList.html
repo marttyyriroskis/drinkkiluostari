@@ -3,52 +3,48 @@
 xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
   <head>
-    <title>Booklist</title>
+    <title>Lista tuotteista</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" />
   </head>
 
   <body>
   <div class="container">
     <div class="col-md-4">
-      <h1>Books</h1>
+      <h1>Tuotteet</h1>
     </div>
 
+<!--
     <div class="col-md-4">
       <span  sec:authentication="name">Name</span>
     </div>
 
     <div class="col-md-4" style="padding:20px 0"></div>
       <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Sign Out" class="btn btn-sm btn-danger"/>
+        <input type="submit" value="Kirjaudu ulos" />
       </form>
 	  </div>
+-->
 
-    <table class="table table-striped">
+    <table>
       <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>ISBN</th>
-        <th>Publication year</th>
-        <th>Price</th>
-        <th>Category</th>
+        <th>Nimi</th>
+        <th>Hinta</th>
+        <th>Kategoria</th>
+<!--
         <th sec:authorize="hasAuthority('ADMIN')"> </th>
+-->
       </tr>
-      <tr th:each="book : ${books}">
-        <td th:text="${book.id}"></td>
-        <td th:text="${book.title}"></td>
-        <td th:text="${book.author}"></td>
-        <td th:text="${book.isbn}"></td>
-        <td th:text="${book.publicationYear}"></td>
-        <td th:text="${book.price}"></td>
-        <td th:text="${book.category.categoryName}"></td></td>
-        <td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/delete/{id}(id=${book.id})}" class="btn btn-danger">Delete</a></td>
-        <td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/editBook/{id}(id=${book.id})}">Edit</a></td>
+      <tr th:each="tuote : ${tuotteet}">
+        <td th:text="${tuote.id}"></td>
+        <td th:text="${tuote.nimi}"></td>
+        <td th:text="${tuote.hinta}"></td>
+        <td th:text="${tuote.kategoria.nimi}"></td></td>
+        <!--<td sec:authorize="hasAuthority('ADMIN')">--><a th:href="@{/tuoteDelete/{id}(id=${tuote.id})}">Poista</a></td>
+        <!--<td sec:authorize="hasAuthority('ADMIN')">--><a th:href="@{/tuoteEdit/{id}(id=${tuote.id})}">Muokkaa</a></td>
       </tr>
     </table>
 
-    <p><td sec:authorize="hasAuthority('ADMIN')"><a href="/newBook" class="btn btn-success">Add book</a></td></p>
-    <a href="/index">Return to main page</a>
+    <p><!--<td sec:authorize="hasAuthority('ADMIN')">--><a href="/tuoteNew">Lisää uusi tuote</a></td></p>
+    <a href="/index">Palaa kotisivulle</a>
   </body>
 </html>

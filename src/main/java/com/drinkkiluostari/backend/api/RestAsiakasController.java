@@ -117,7 +117,7 @@ public class RestAsiakasController {
 
         asiakas.setNimi(editedAsiakas.getNimi());
         asiakas.setKatuosoite(editedAsiakas.getKatuosoite());
-        asiakas.setY_tunnus(editedAsiakas.getY_tunnus());
+        asiakas.setyTunnus(editedAsiakas.getyTunnus());
         asiakas.setTilaukset(validTilaukset);
 
         return asiakasRepository.save(asiakas);

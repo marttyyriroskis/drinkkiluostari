@@ -2,52 +2,38 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Edit book</title>
+    <title>Muokkaa tuotteen tietoja</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="/css/edit-styles.css" />
 </head>
 
 <body>
-    <h1>Edit a book</h1>
+    <h1>Muokkaa tuotteen tietoja</h1>
     <div>
-        <form th:object="${editBook}" th:action="@{/saveEditedBook}" action="#" method="post">
+        <form th:object="${tuoteEdit}" th:action="@{/tuoteSaveEdited}" action="#" method="post">
             <input type="hidden" id="id" th:field="*{id}" />
             <div>
-                <label>Title</label>
-                <input type="text" th:field="*{title}" />
-                <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Error</div>
+                <label>Nimi</label>
+                <input type="text" th:field="*{nimi}" />
+                <div th:if="${#fields.hasErrors('nimi')}" th:errors="*{nimi}">Error</div>
             </div>
+
             <div>
-                <label>Author</label>
-                <input type="text" th:field="*{author}" />
-                <div th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Error</div>
-            </div>
-            <div>
-                <label>ISBN</label>
-                <input type="text" th:field="*{isbn}" />
-                <div th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}">Error</div>
-            </div>
-            <div>
-                <label>Publication year</label>
-                <input type="text" th:field="*{publicationYear}" />
-                <div th:if="${#fields.hasErrors('publicationYear')}" th:errors="*{publicationYear}">Error</div>
-            </div>
-            <div>
-                <label>Price</label>
-                <input type="text" th:field="*{price}" />
-                <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Error</div>
+                <label>Hinta</label>
+                <input type="number" th:field="*{hinta}" step="0.01" />
+                <div th:if="${#fields.hasErrors('hinta')}" th:errors="*{hinta}">Error</div>
             </div>
 
             <div style="clear: both; display: block; height: 10px;"></div>
-            <label for="categoryList">Category</label>
-            <select id="categoryList" th:field="*{category}" class="form-control">
-                <option th:each="category: ${categories}" th:value="${category.categoryId}"
-                    th:text="${category.categoryName}">
+            <label for="kategoriaList">Kategoriat</label>
+            <select id="kategoriaList" th:field="*{kategoria}" class="form-control">
+                <option th:each="kategoria: ${kategoriat}" th:value="${kategoria.id}"
+                    th:text="${kategoria.nimi}">
                 </option>
             </select>
-
             <div style="clear: both; display: block; height: 10px;"></div>
 
-            <input type="submit" value="Save changes"></input>
+            <input type="submit" value="Tallenna muutokset"></input>
         </form>
 
     </div>

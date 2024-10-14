@@ -1,0 +1,84 @@
+/* General page styling */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Form container */
+div {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+/* Heading styling */
+h1 {
+  text-align: center;
+  font-size: 1.8em;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Form styling */
+form div {
+  margin-bottom: 15px;
+}
+
+/* Label styling */
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+  color: #555;
+}
+
+/* Input field styling */
+input[type="text"],
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 1em;
+}
+
+/* Submit button styling */
+input[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+}
+
+/* Submit button hover effect */
+input[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* Form element spacing */
+div {
+  margin-bottom: 15px;
+}
+
+/* Select dropdown styling */
+select {
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  width: 100%;
+}

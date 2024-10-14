@@ -21,7 +21,7 @@ public class Asiakas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nimi, katuosoite, y_tunnus;
+    private String nimi, katuosoite, yTunnus;
 
     @ManyToOne
     @JoinColumn(name = "postinumero")
@@ -34,16 +34,16 @@ public class Asiakas {
     public Asiakas() {
     }
 
-    public Asiakas(String nimi, String katuosoite, String y_tunnus) {
+    public Asiakas(String nimi, String katuosoite, String yTunnus) {
         this.nimi = nimi;
         this.katuosoite = katuosoite;
-        this.y_tunnus = y_tunnus;
+        this.yTunnus = yTunnus;
     }
 
-    public Asiakas(String nimi, String katuosoite, String y_tunnus, Postinumero postinumero, List<Tilaus> tilaukset) {
+    public Asiakas(String nimi, String katuosoite, String yTunnus, Postinumero postinumero, List<Tilaus> tilaukset) {
         this.nimi = nimi;
         this.katuosoite = katuosoite;
-        this.y_tunnus = y_tunnus;
+        this.yTunnus = yTunnus;
         this.postinumero = postinumero;
         this.tilaukset = tilaukset;
     }
@@ -72,12 +72,12 @@ public class Asiakas {
         this.katuosoite = katuosoite;
     }
 
-    public String getY_tunnus() {
-        return y_tunnus;
+    public String getyTunnus() {
+        return yTunnus;
     }
 
-    public void setY_tunnus(String y_tunnus) {
-        this.y_tunnus = y_tunnus;
+    public void setyTunnus(String yTunnus) {
+        this.yTunnus = yTunnus;
     }
 
     public Postinumero getPostinumero() {
@@ -98,7 +98,7 @@ public class Asiakas {
 
     @Override
     public String toString() {
-        return "Asiakas [id=" + id + ", nimi=" + nimi + ", katuosoite=" + katuosoite + ", y_tunnus=" + y_tunnus
+        return "Asiakas [id=" + id + ", nimi=" + nimi + ", katuosoite=" + katuosoite + ", y_tunnus=" + yTunnus
                 + ", postinumero=" + postinumero + ", tilaukset=" + tilaukset + "]";
     }
 
