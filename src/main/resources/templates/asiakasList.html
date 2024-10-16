@@ -17,7 +17,7 @@
 
       <div class="top-right">
         <span sec:authentication="name">Name</span>
-        <form th:action="@{/logout}" method="post" style="margin-left: 10px;">
+        <form th:action="@{/logout}" method="post" style="margin-left: 10px">
           <input type="submit" value="Kirjaudu ulos" />
         </form>
       </div>
@@ -33,7 +33,7 @@
         <th sec:authorize="hasAuthority('ADMIN')"></th>
         <th sec:authorize="hasAuthority('ADMIN')"></th>
       </tr>
-      
+
       <tr th:each="asiakas : ${asiakkaat}">
         <td th:text="${asiakas.id}"></td>
         <td th:text="${asiakas.nimi}"></td>
@@ -50,6 +50,7 @@
     </table>
 
     <p>
+      <td sec:authorize="hasAuthority('ADMIN')">
         <a href="/asiakasNew">Lisää uusi asiakas</a>
       </td>
     </p>

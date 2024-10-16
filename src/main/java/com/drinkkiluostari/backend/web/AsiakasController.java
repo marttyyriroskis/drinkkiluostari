@@ -38,6 +38,7 @@ public class AsiakasController {
     }
 
     // Add new asiakas
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/asiakasNew")
     public String newAsiakas(Model model) {
         model.addAttribute("asiakas", new Asiakas());
@@ -47,6 +48,7 @@ public class AsiakasController {
     }
 
     // Save a new asiakas
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/asiakasSave")
     public String saveAsiakas(@Valid @ModelAttribute("asiakas") Asiakas asiakas, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {

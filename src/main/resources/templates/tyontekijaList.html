@@ -32,7 +32,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
         <th sec:authorize="hasAuthority('ADMIN')"> </th>
         <th sec:authorize="hasAuthority('ADMIN')"></th>
       </tr>
-      
+
       <tr th:each="tyontekija : ${tyontekijat}">
         <td th:text="${tyontekija.id}"></td>
         <td th:text="${tyontekija.etunimi}"></td>
@@ -44,7 +44,11 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
       </tr>
     </table>
 
-    <p><td sec:authorize="hasAuthority('ADMIN')"><a href="/tyontekijaNew">Lisää uusi työntekijä</a></td></p>
+    <p>
+      <td sec:authorize="hasAuthority('ADMIN')">
+        <a href="/tyontekijaNew">Lisää uusi työntekijä</a>
+      </td>
+    </p>
     <a href="/index">Palaa kotisivulle</a>
   </body>
 </html>

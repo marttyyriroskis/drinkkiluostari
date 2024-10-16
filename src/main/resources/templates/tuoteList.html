@@ -31,7 +31,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
         <th sec:authorize="hasAuthority('ADMIN')"> </th>
         <th sec:authorize="hasAuthority('ADMIN')"></th>
       </tr>
-      
+
       <tr th:each="tuote : ${tuotteet}">
         <td th:text="${tuote.id}"></td>
         <td th:text="${tuote.nimi}"></td>
@@ -42,7 +42,11 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
       </tr>
     </table>
 
-    <p><td sec:authorize="hasAuthority('ADMIN')"><a href="/tuoteNew">Lisää uusi tuote</a></td></p>
+    <p>
+      <td sec:authorize="hasAuthority('ADMIN')">
+        <a href="/tuoteNew">Lisää uusi tuote</a>
+      </td>
+    </p>
     <a href="/index">Palaa kotisivulle</a>
   </body>
 </html>

@@ -42,6 +42,7 @@ public class TilausController {
     }
 
     // Add new tilaus
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tilausNew")
     public String newTilaus(Model model) {
         model.addAttribute("tilaus", new Tilaus());
@@ -52,6 +53,7 @@ public class TilausController {
     }
 
     // Save a new tilaus
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tilausSave")
     public String saveTilaus(@Valid @ModelAttribute("tilaus") Tilaus tilaus, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
