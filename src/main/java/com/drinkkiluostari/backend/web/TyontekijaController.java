@@ -1,6 +1,6 @@
 package com.drinkkiluostari.backend.web;
 
-//import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,7 +38,7 @@ public class TyontekijaController {
     }
 
     // Add new työntekijä
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tyontekijaNew")
     public String newTyontekija(Model model) {
         model.addAttribute("tyontekija", new Tyontekija());
@@ -48,7 +48,7 @@ public class TyontekijaController {
     }
 
     // Save a new työntekijä
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tyontekijaSave")
     public String saveTyontekija(@Valid @ModelAttribute("tyontekija") Tyontekija tyontekija, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -62,7 +62,7 @@ public class TyontekijaController {
     }
 
     // Edit työntekijä
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tyontekijaEdit/{id}")
     public String editTyontekija(@PathVariable("id") Long id, Model model) {
         model.addAttribute("tyontekijaEdit", tyontekijaRepository.findById(id));
@@ -72,7 +72,7 @@ public class TyontekijaController {
     }
 
     // Save an edited työntekijä
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tyontekijaSaveEdited")
     public String saveEditedTyontekija(@Valid @ModelAttribute("tyontekija") Tyontekija tyontekija, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -91,7 +91,7 @@ public class TyontekijaController {
     }
 
     // Delete työntekijä
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tyontekijaDelete/{id}")
     public String deleteTyontekija(@PathVariable("id") Long id, Model model) {
         tyontekijaRepository.deleteById(id);

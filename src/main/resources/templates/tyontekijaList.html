@@ -5,6 +5,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
   <head>
     <title>Lista työntekijöistä</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="/css/list-styles.css" />
   </head>
 
   <body>
@@ -13,17 +14,13 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
       <h1>Työntekijät</h1>
     </div>
 
-<!--
-    <div class="col-md-4">
-      <span  sec:authentication="name">Name</span>
+    <div class="top-right">
+        <span sec:authentication="name">Name</span>
+        <form th:action="@{/logout}" method="post" style="margin-left: 10px;">
+          <input type="submit" value="Kirjaudu ulos" />
+        </form>
+      </div>
     </div>
-
-    <div class="col-md-4" style="padding:20px 0"></div>
-      <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Kirjaudu ulos" />
-      </form>
-	  </div>
--->
 
     <table>
       <tr>
@@ -32,22 +29,22 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
         <th>Sukunimi</th>
         <th>Sähköposti</th>
         <th>Rooli</th>
-<!--
         <th sec:authorize="hasAuthority('ADMIN')"> </th>
--->
+        <th sec:authorize="hasAuthority('ADMIN')"></th>
       </tr>
+      
       <tr th:each="tyontekija : ${tyontekijat}">
         <td th:text="${tyontekija.id}"></td>
         <td th:text="${tyontekija.etunimi}"></td>
         <td th:text="${tyontekija.sukunimi}"></td>
         <td th:text="${tyontekija.sahkoposti}"></td>
         <td th:text="${tyontekija.rooli.nimi}"></td></td>
-        <!--<td sec:authorize="hasAuthority('ADMIN')">--><a th:href="@{/tyontekijaDelete/{id}(id=${tyontekija.id})}">Poista</a></td>
-        <!--<td sec:authorize="hasAuthority('ADMIN')">--><a th:href="@{/tyontekijaEdit/{id}(id=${tyontekija.id})}">Muokkaa</a></td>
+        <td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/tyontekijaDelete/{id}(id=${tyontekija.id})}">Poista</a></td>
+        <td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/tyontekijaEdit/{id}(id=${tyontekija.id})}">Muokkaa</a></td>
       </tr>
     </table>
 
-    <p><!--<td sec:authorize="hasAuthority('ADMIN')">--><a href="/tyontekijaNew">Lisää uusi työntekijä</a></td></p>
+    <p><td sec:authorize="hasAuthority('ADMIN')"><a href="/tyontekijaNew">Lisää uusi työntekijä</a></td></p>
     <a href="/index">Palaa kotisivulle</a>
   </body>
 </html>

@@ -1,6 +1,6 @@
 package com.drinkkiluostari.backend.web;
 
-//import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,7 +38,6 @@ public class AsiakasController {
     }
 
     // Add new asiakas
-    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/asiakasNew")
     public String newAsiakas(Model model) {
         model.addAttribute("asiakas", new Asiakas());
@@ -48,7 +47,6 @@ public class AsiakasController {
     }
 
     // Save a new asiakas
-    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/asiakasSave")
     public String saveAsiakas(@Valid @ModelAttribute("asiakas") Asiakas asiakas, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -62,7 +60,7 @@ public class AsiakasController {
     }
 
     // Edit asiakas
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/asiakasEdit/{id}")
     public String editAsiakas(@PathVariable("id") Long id, Model model) {
         model.addAttribute("asiakasEdit", asiakasRepository.findById(id));
@@ -72,7 +70,7 @@ public class AsiakasController {
     }
 
     // Save an edited asiakas
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/asiakasSaveEdited")
     public String saveEditedAsiakas(@Valid @ModelAttribute("asiakas") Asiakas asiakas, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -91,7 +89,7 @@ public class AsiakasController {
     }
 
     // Delete asiakas
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/asiakasDelete/{id}")
     public String deleteAsiakas(@PathVariable("id") Long id, Model model) {
         asiakasRepository.deleteById(id);

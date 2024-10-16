@@ -3,6 +3,7 @@ package com.drinkkiluostari.backend.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +22,10 @@ public class Tyontekija {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String etunimi, sukunimi, sahkoposti, salasana;
+    private String etunimi, sukunimi, salasana;
+
+    @Column(name = "sahkoposti", unique = true)
+    private String sahkoposti;
 
     @ManyToOne
     @JoinColumn(name = "rooli_id")

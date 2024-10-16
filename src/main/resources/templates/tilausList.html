@@ -5,6 +5,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
   <head>
     <title>Lista tilauksista</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="/css/list-styles.css" />
   </head>
 
   <body>
@@ -13,17 +14,13 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
       <h1>Tilaukset</h1>
     </div>
 
-<!--
-    <div class="col-md-4">
-      <span  sec:authentication="name">Name</span>
+    <div class="top-right">
+        <span sec:authentication="name">Name</span>
+        <form th:action="@{/logout}" method="post" style="margin-left: 10px;">
+          <input type="submit" value="Kirjaudu ulos" />
+        </form>
+      </div>
     </div>
-
-    <div class="col-md-4" style="padding:20px 0"></div>
-      <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Kirjaudu ulos" />
-      </form>
-	  </div>
--->
 
     <table>
       <tr>
@@ -31,17 +28,17 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
         <th>Päivämäärä</th>
         <th>Työntekijä</th>
         <th>Asiakas</th>
-<!--
         <th sec:authorize="hasAuthority('ADMIN')"> </th>
--->
+        <th sec:authorize="hasAuthority('ADMIN')"></th>
       </tr>
+      
       <tr th:each="tilaus : ${tilaukset}">
         <td th:text="${tilaus.id}"></td>
         <td th:text="${tilaus.pvm}"></td>
         <td th:text="${tilaus.tyontekija.sukunimi}"></td>
         <td th:text="${tilaus.asiakas.nimi}"></td></td>
-        <!--<td sec:authorize="hasAuthority('ADMIN')">--><a th:href="@{/tilausDelete/{id}(id=${tilaus.id})}">Poista</a></td>
-        <!--<td sec:authorize="hasAuthority('ADMIN')">--><a th:href="@{/tilausEdit/{id}(id=${tilaus.id})}">Muokkaa</a></td>
+        <td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/tilausDelete/{id}(id=${tilaus.id})}">Poista</a></td>
+        <td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/tilausEdit/{id}(id=${tilaus.id})}">Muokkaa</a></td>
       </tr>
     </table>
 

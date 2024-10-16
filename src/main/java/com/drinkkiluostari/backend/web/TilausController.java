@@ -1,6 +1,6 @@
 package com.drinkkiluostari.backend.web;
 
-//import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,10 +42,9 @@ public class TilausController {
     }
 
     // Add new tilaus
-    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/tilausNew")
     public String newTilaus(Model model) {
-        model.addAttribute("asiakas", new Tilaus());
+        model.addAttribute("tilaus", new Tilaus());
         model.addAttribute("asiakkaat", asiakasRepository.findAll());
         model.addAttribute("tyontekijat", tyontekijaRepository.findAll());
         model.addAttribute("tilausrivit", tilausriviRepository.findAll());
@@ -53,7 +52,6 @@ public class TilausController {
     }
 
     // Save a new tilaus
-    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/tilausSave")
     public String saveTilaus(@Valid @ModelAttribute("tilaus") Tilaus tilaus, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -68,7 +66,7 @@ public class TilausController {
     }
 
     // Edit tilaus
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tilausEdit/{id}")
     public String editTilaus(@PathVariable("id") Long id, Model model) {
         model.addAttribute("tilausEdit", tilausRepository.findById(id));
@@ -79,7 +77,7 @@ public class TilausController {
     }
 
     // Save an edited tilaus
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tilausSaveEdited")
     public String saveEditedTilaus(@Valid @ModelAttribute("tilaus") Tilaus tilaus, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -99,7 +97,7 @@ public class TilausController {
     }
 
     // Delete tilaus
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tilausDelete/{id}")
     public String deleteTilaus(@PathVariable("id") Long id, Model model) {
         tilausRepository.deleteById(id);

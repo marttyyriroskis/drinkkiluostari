@@ -1,6 +1,6 @@
 package com.drinkkiluostari.backend.web;
 
-//import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,7 +38,7 @@ public class TuoteController {
     }
 
     // Add new tuote
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tuoteNew")
     public String newTuote(Model model) {
         model.addAttribute("tuote", new Tuote());
@@ -48,7 +48,7 @@ public class TuoteController {
     }
 
     // Save a new tuote
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tuoteSave")
     public String saveTuote(@Valid @ModelAttribute("tuote") Tuote tuote, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -62,7 +62,7 @@ public class TuoteController {
     }
 
     // Edit tuote
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tuoteEdit/{id}")
     public String editTuote(@PathVariable("id") Long id, Model model) {
         model.addAttribute("tuoteEdit", tuoteRepository.findById(id));
@@ -72,7 +72,7 @@ public class TuoteController {
     }
 
     // Save an edited tuote
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tuoteSaveEdited")
     public String saveEditedTuote(@Valid @ModelAttribute("tuote") Tuote tuote, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -91,7 +91,7 @@ public class TuoteController {
     }
 
     // Delete tuote
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tuoteDelete/{id}")
     public String deleteTuote(@PathVariable("id") Long id, Model model) {
         tuoteRepository.deleteById(id);

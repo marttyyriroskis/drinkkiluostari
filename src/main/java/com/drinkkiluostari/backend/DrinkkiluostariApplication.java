@@ -54,8 +54,8 @@ public class DrinkkiluostariApplication {
 			postinumeroRepository.save(new Postinumero("01600", "Vantaa"));
 
 			log.info("Creating rooli test entries");
-			rooliRepository.save(new Rooli("Käyttäjä"));
-			rooliRepository.save(new Rooli("Admin"));
+			rooliRepository.save(new Rooli("KAYTTAJA"));
+			rooliRepository.save(new Rooli("ADMIN"));
 
 			log.info("Creating tilaus test entries");
 			tilausRepository.save(new Tilaus(LocalDateTime.of(2024, 9, 12, 12, 00)));
@@ -70,8 +70,8 @@ public class DrinkkiluostariApplication {
 			tuoteRepository.save(new Tuote("Taateli", 6.0));
 
 			log.info("Creating tyontekija test entries");
-			tyontekijaRepository.save(new Tyontekija("Juha", "Juhanen", "juha.juhanen@sahkoposti.fi", "kayttaja"));
-			tyontekijaRepository.save(new Tyontekija("Marja", "Marjanen", "marja.marjanen@sahkoposti.fi", "admin"));
+			tyontekijaRepository.save(new Tyontekija("Juha", "Juhanen", "juha.juhanen@sahkoposti.fi", "$2a$10$es76Go.W1/f5/Jms3SBvnuVG20qxUXzXq1KYvJUTxYH6PLxABzafO"));
+			tyontekijaRepository.save(new Tyontekija("Marja", "Marjanen", "marja.marjanen@sahkoposti.fi", "$2a$10$uZpnGGH1amn9MEKspLG/Q.PUe58g7Ti8It3y9EWNt/1WcEk6GocdO"));
 
 			log.info("Adding relationships...");
 			Asiakas asiakas1 = asiakasRepository.findById(1L).get();
