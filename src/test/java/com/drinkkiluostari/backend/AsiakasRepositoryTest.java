@@ -32,7 +32,7 @@ public class AsiakasRepositoryTest {
     }
 
     @Test
-    public void findByIdShouldReturnAsiakas() {
+    public void findByIdReturnsAsiakas() {
         assertThat(asiakasRepository.findById(1L).get()).isNotNull();
     }
 

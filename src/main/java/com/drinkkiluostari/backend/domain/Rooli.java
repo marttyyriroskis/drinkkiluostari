@@ -32,6 +32,11 @@ public class Rooli {
         this.nimi = nimi;
     }
 
+    public Rooli(String nimi, List<Tyontekija> tyontekijat) {
+        this.nimi = nimi;
+        this.tyontekijat = tyontekijat;
+    }
+
     public Long getId() {
         return id;
     }

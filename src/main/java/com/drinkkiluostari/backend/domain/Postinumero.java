@@ -33,6 +33,12 @@ public class Postinumero {
         this.postitoimipaikka = postitoimipaikka;
     }
 
+    public Postinumero(String postinumero, String postitoimipaikka, List<Asiakas> asiakkaat) {
+        this.postinumero = postinumero;
+        this.postitoimipaikka = postitoimipaikka;
+        this.asiakkaat = asiakkaat;
+    }
+
     public Long getId() {
         return id;
     }
