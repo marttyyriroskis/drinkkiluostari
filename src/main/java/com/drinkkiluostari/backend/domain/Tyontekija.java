@@ -31,7 +31,7 @@ public class Tyontekija {
     @JoinColumn(name = "rooli_id")
     private Rooli rooli;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tyontekija")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tyontekija", orphanRemoval = true)
     @JsonIgnore
     private List<Tilaus> tilaukset;
 

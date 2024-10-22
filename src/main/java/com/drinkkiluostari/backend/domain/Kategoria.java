@@ -21,7 +21,7 @@ public class Kategoria {
 
     private String nimi;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "kategoria")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "kategoria", orphanRemoval = true)
     @JsonIgnore
     private List<Tuote> tuotteet;
 

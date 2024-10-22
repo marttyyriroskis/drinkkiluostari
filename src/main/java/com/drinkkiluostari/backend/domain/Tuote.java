@@ -28,7 +28,7 @@ public class Tuote {
     @JoinColumn(name = "kategoria_id")
     private Kategoria kategoria;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tuote")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tuote", orphanRemoval = true)
     @JsonIgnore
     private List<Tilausrivi> tilausrivit;
 

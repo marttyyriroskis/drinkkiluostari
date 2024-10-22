@@ -33,7 +33,7 @@ public class Tilaus {
     @JoinColumn(name = "asiakas_id")
     private Asiakas asiakas;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tilaus")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tilaus", orphanRemoval = true)
     @JsonIgnore
     private List<Tilausrivi> tilausrivit;
 

@@ -2,29 +2,21 @@ package com.drinkkiluostari.backend;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.drinkkiluostari.backend.domain.Rooli;
 import com.drinkkiluostari.backend.repository.RooliRepository;
-import com.drinkkiluostari.backend.domain.Tyontekija;
-import com.drinkkiluostari.backend.repository.TyontekijaRepository;
 
 @SpringBootTest(classes = DrinkkiluostariApplication.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class RooliRepositoryTest {
-    private final RooliRepository rooliRepository;
-    private final TyontekijaRepository tyontekijaRepository;
-    
-    public RooliRepositoryTest(RooliRepository rooliRepository, TyontekijaRepository tyontekijaRepository) {
-        this.rooliRepository = rooliRepository;
-        this.tyontekijaRepository = tyontekijaRepository;
-    }
+    @Autowired
+    private RooliRepository rooliRepository;
 
     @Test
     public void findByIdReturnsRooli() {
@@ -33,13 +25,7 @@ public class RooliRepositoryTest {
 
     @Test
     public void createAndDeleteRooli() {
-        Tyontekija tyontekija = new Tyontekija("Maija", "Mehiläinen", "maija.mehilainen@sahkoposti.fi", "$2a$10$reVlDE7xaEZ5XKhCrX0IpOIeNzEzMZkqkwKxvTsIhlqAMMIMz1Cci");
-        tyontekijaRepository.save(tyontekija);
-
-        List<Tyontekija> tyontekijat = new ArrayList<>();
-        tyontekijat.add(tyontekija);
-
-        Rooli rooli = new Rooli("VIERAS", tyontekijat);
+        Rooli rooli = new Rooli("VIERAS");
         rooliRepository.save(rooli);
 
         assertThat(rooli.getId()).isNotNull();

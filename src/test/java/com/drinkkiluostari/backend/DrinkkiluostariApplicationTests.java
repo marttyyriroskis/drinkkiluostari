@@ -3,6 +3,7 @@ package com.drinkkiluostari.backend;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.drinkkiluostari.backend.web.AsiakasController;
@@ -13,18 +14,17 @@ import com.drinkkiluostari.backend.web.TyontekijaController;
 @SpringBootTest
 class DrinkkiluostariApplicationTests {
 
-	private final AsiakasController asiakasController;
-    private final TilausController tilausController;
-    private final TuoteController tuoteController;
-	private final TyontekijaController tyontekijaController;
-    
-    public DrinkkiluostariApplicationTests(AsiakasController asiakasController, TilausController tilausController,
-	TuoteController tuoteController, TyontekijaController tyontekijaController) {
-        this.asiakasController = asiakasController;
-        this.tilausController = tilausController;
-        this.tuoteController = tuoteController;
-		this.tyontekijaController = tyontekijaController;
-    }
+	@Autowired
+	private AsiakasController asiakasController;
+
+	@Autowired
+    private TilausController tilausController;
+
+	@Autowired
+    private TuoteController tuoteController;
+	
+	@Autowired
+	private TyontekijaController tyontekijaController;
 
 	@Test
 	void contextLoadsAsiakas() throws Exception {

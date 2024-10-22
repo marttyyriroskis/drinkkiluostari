@@ -27,7 +27,7 @@ public class Asiakas {
     @JoinColumn(name = "postinumero")
     private Postinumero postinumero;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "asiakas")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "asiakas", orphanRemoval = true)
     @JsonIgnore
     private List<Tilaus> tilaukset;
 

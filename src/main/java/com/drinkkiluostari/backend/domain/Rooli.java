@@ -21,7 +21,7 @@ public class Rooli {
 
     private String nimi;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "rooli")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "rooli", orphanRemoval = true)
     @JsonIgnore
     private List<Tyontekija> tyontekijat;
 

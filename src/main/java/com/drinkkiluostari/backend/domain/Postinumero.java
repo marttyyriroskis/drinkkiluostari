@@ -21,7 +21,7 @@ public class Postinumero {
 
     private String postinumero, postitoimipaikka;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postinumero")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postinumero", orphanRemoval = true)
     @JsonIgnore
     private List<Asiakas> asiakkaat;
 
