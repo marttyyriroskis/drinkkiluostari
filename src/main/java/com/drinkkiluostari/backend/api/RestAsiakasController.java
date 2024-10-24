@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.drinkkiluostari.backend.domain.Asiakas;
+import com.drinkkiluostari.backend.dto.AsiakasDTO;
 import com.drinkkiluostari.backend.repository.AsiakasRepository;
 import com.drinkkiluostari.backend.domain.Postinumero;
 import com.drinkkiluostari.backend.repository.PostinumeroRepository;
@@ -40,9 +42,15 @@ public class RestAsiakasController {
     }
 
     // Get asiakkaat
-    @GetMapping("")
-    public Iterable<Asiakas> getAsiakkaat() {
-        return asiakasRepository.findAll();
+    @GetMapping
+    public ResponseEntity<List<AsiakasDTO>> getAsiakkaat() {
+        Iterable<Asiakas> iterableAsiakkaat = asiakasRepository.findAllActive();
+        List<Asiakas> asiakasList = new ArrayList<>();
+        iterableAsiakkaat.forEach(asiakasList::add);
+
+        return ResponseEntity.ok(asiakasList.stream()
+                .map(Asiakas::toDTO)
+                .toList());
     }
     
     // Get asiakas by id

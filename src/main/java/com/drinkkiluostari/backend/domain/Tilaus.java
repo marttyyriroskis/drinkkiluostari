@@ -2,6 +2,7 @@ package com.drinkkiluostari.backend.domain;
 
 import java.time.LocalDateTime;
 
+import com.drinkkiluostari.backend.dto.TilausDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -15,6 +16,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tilaukset")
@@ -89,6 +91,17 @@ public class Tilaus {
 
     public void setTilausrivit(List<Tilausrivi> tilausrivit) {
         this.tilausrivit = tilausrivit;
+    }
+
+    public TilausDTO toDTO() {
+        return new TilausDTO(
+            this.pvm,
+            this.tyontekija.toDTO(),
+            this.asiakas.toDTO(),
+            
+            this.tilausrivit.stream()
+                .map(Tilausrivi::getId)
+                .collect(Collectors.toList()));
     }
     
     @Override

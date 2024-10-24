@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import com.drinkkiluostari.backend.dto.TilausriviDTO;
 
 @Entity
 @Table(name = "tilausrivit")
@@ -89,6 +90,15 @@ public class Tilausrivi {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public TilausriviDTO toDTO() {
+        return new TilausriviDTO(
+            this.hinta,
+            this.alennus,
+            this.maara,
+            this.tuote.toDTO(),
+            this.tilaus.toDTO());
     }
 
     @Override

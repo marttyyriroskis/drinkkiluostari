@@ -1,7 +1,6 @@
 package com.drinkkiluostari.backend.domain;
 
-import java.util.List;
-
+import com.drinkkiluostari.backend.dto.KategoriaDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -11,6 +10,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "kategoriat")
@@ -59,6 +61,14 @@ public class Kategoria {
 
     public void setTuotteet(List<Tuote> tuotteet) {
         this.tuotteet = tuotteet;
+    }
+
+    public KategoriaDTO toDTO() {
+        return new KategoriaDTO(this.nimi,
+            
+            this.tuotteet.stream()
+                .map(Tuote::getId)
+                .collect(Collectors.toList()));
     }
 
     @Override

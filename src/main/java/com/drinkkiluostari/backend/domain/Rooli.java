@@ -1,7 +1,6 @@
 package com.drinkkiluostari.backend.domain;
 
-import java.util.List;
-
+import com.drinkkiluostari.backend.dto.RooliDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -11,6 +10,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "roolit")
@@ -59,6 +61,14 @@ public class Rooli {
 
     public void setTyontekijat(List<Tyontekija> tyontekijat) {
         this.tyontekijat = tyontekijat;
+    }
+
+    public RooliDTO toDTO() {
+        return new RooliDTO(this.nimi,
+            
+            this.tyontekijat.stream()
+                .map(Tyontekija::getId)
+                .collect(Collectors.toList()));
     }
 
     @Override

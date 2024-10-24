@@ -1,5 +1,6 @@
 package com.drinkkiluostari.backend.domain;
 
+import com.drinkkiluostari.backend.dto.TuoteDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -13,6 +14,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tuotteet")
@@ -87,6 +89,17 @@ public class Tuote {
         this.tilausrivit = tilausrivit;
     }
     
+    public TuoteDTO toDTO() {
+        return new TuoteDTO(
+            this.nimi,
+            this.hinta,
+            this.kategoria.toDTO(),
+
+            this.tilausrivit.stream()
+                .map(Tilausrivi::getId)
+                .collect(Collectors.toList()));
+    }
+
     @Override
     public String toString() {
         return "Tuote [id=" + id + ", nimi=" + nimi + ", hinta=" + hinta + ", kategoria=" + kategoria + ", tilausrivit="
