@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +58,7 @@ public class RestTyontekijaController {
     }
     
     // Post a new tyontekija
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<TyontekijaDTO> newTyontekija(@Valid @RequestBody TyontekijaDTO tyontekijaDTO) {
         Rooli rooli = rooliRepository.findById(tyontekijaDTO.rooli().id())
@@ -74,6 +76,7 @@ public class RestTyontekijaController {
     }
     
     // Edit tyontekija
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<TyontekijaDTO> editTyontekija(@Valid @RequestBody TyontekijaDTO tyontekijaDTO, @PathVariable Long id) {
         Tyontekija tyontekija = tyontekijaRepository.findByIdActive(id)
@@ -93,6 +96,7 @@ public class RestTyontekijaController {
     }
 
     // Delete tyontekija
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Tyontekija> deleteTyontekija(@PathVariable Long id) {
         Tyontekija tyontekija = tyontekijaRepository.findByIdActive(id)

@@ -1,5 +1,6 @@
 package com.drinkkiluostari.backend.web;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.drinkkiluostari.backend.domain.Asiakas;
 import com.drinkkiluostari.backend.repository.AsiakasRepository;
@@ -33,28 +35,26 @@ public class AsiakasController {
     // Get asiakkaat
     @GetMapping("/asiakasList")
     public String getAsiakkaat(Model model) {
-        model.addAttribute("asiakkaat", asiakasRepository.findAll());
+        model.addAttribute("asiakkaat", asiakasRepository.findAllActive());
         return "/asiakasList";
     }
 
     // Add new asiakas
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/asiakasNew")
     public String newAsiakas(Model model) {
         model.addAttribute("asiakas", new Asiakas());
         model.addAttribute("postinumerot", postinumeroRepository.findAll());
-        model.addAttribute("tilaukset", tilausRepository.findAll());
+        model.addAttribute("tilaukset", tilausRepository.findAllActive());
         return "/asiakasNew";
     }
 
     // Save a new asiakas
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/asiakasSave")
     public String saveAsiakas(@Valid @ModelAttribute("asiakas") Asiakas asiakas, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("asiakasEdit", asiakas);
             model.addAttribute("postinumerot", postinumeroRepository.findAll());
-            model.addAttribute("tilaukset", tilausRepository.findAll());
+            model.addAttribute("tilaukset", tilausRepository.findAllActive());
             return "/asiakasNew";
         }
         asiakasRepository.save(asiakas);
@@ -62,23 +62,21 @@ public class AsiakasController {
     }
 
     // Edit asiakas
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/asiakasEdit/{id}")
     public String editAsiakas(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("asiakasEdit", asiakasRepository.findById(id));
+        model.addAttribute("asiakasEdit", asiakasRepository.findByIdActive(id));
         model.addAttribute("postinumerot", postinumeroRepository.findAll());
-        model.addAttribute("tilaukset", tilausRepository.findAll());
+        model.addAttribute("tilaukset", tilausRepository.findAllActive());
         return "/asiakasEdit";
     }
 
     // Save an edited asiakas
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/asiakasSaveEdited")
     public String saveEditedAsiakas(@Valid @ModelAttribute("asiakas") Asiakas asiakas, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("asiakasEdit", asiakas);
             model.addAttribute("postinumerot", postinumeroRepository.findAll());
-            model.addAttribute("tilaukset", tilausRepository.findAll());
+            model.addAttribute("tilaukset", tilausRepository.findAllActive());
             return "/asiakasEdit";
         }
 
@@ -94,7 +92,12 @@ public class AsiakasController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/asiakasDelete/{id}")
     public String deleteAsiakas(@PathVariable("id") Long id, Model model) {
-        asiakasRepository.deleteById(id);
+        Asiakas asiakas = asiakasRepository.findByIdActive(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Asiakas not found"));
+
+        asiakas.delete();
+
+        asiakasRepository.save(asiakas);
         return "redirect:/asiakasList";
     }
 

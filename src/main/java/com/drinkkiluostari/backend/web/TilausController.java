@@ -1,5 +1,6 @@
 package com.drinkkiluostari.backend.web;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.drinkkiluostari.backend.domain.Tilaus;
 import com.drinkkiluostari.backend.repository.AsiakasRepository;
@@ -37,29 +39,27 @@ public class TilausController {
     // Get tilaukset
     @GetMapping("/tilausList")
     public String getTilaukset(Model model) {
-        model.addAttribute("tilaukset", tilausRepository.findAll());
+        model.addAttribute("tilaukset", tilausRepository.findAllActive());
         return "/tilausList";
     }
 
     // Add new tilaus
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tilausNew")
     public String newTilaus(Model model) {
         model.addAttribute("tilaus", new Tilaus());
-        model.addAttribute("asiakkaat", asiakasRepository.findAll());
-        model.addAttribute("tyontekijat", tyontekijaRepository.findAll());
+        model.addAttribute("asiakkaat", asiakasRepository.findAllActive());
+        model.addAttribute("tyontekijat", tyontekijaRepository.findAllActive());
         model.addAttribute("tilausrivit", tilausriviRepository.findAll());
         return "/tilausNew";
     }
 
     // Save a new tilaus
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tilausSave")
     public String saveTilaus(@Valid @ModelAttribute("tilaus") Tilaus tilaus, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("tilausEdit", tilaus);
-            model.addAttribute("asiakkaat", asiakasRepository.findAll());
-            model.addAttribute("tyontekijat", tyontekijaRepository.findAll());
+            model.addAttribute("asiakkaat", asiakasRepository.findAllActive());
+            model.addAttribute("tyontekijat", tyontekijaRepository.findAllActive());
             model.addAttribute("tilausrivit", tilausriviRepository.findAll());
             return "/tilausNew";
         }
@@ -68,24 +68,22 @@ public class TilausController {
     }
 
     // Edit tilaus
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tilausEdit/{id}")
     public String editTilaus(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("tilausEdit", tilausRepository.findById(id));
-        model.addAttribute("asiakkaat", asiakasRepository.findAll());
-        model.addAttribute("tyontekijat", tyontekijaRepository.findAll());
+        model.addAttribute("tilausEdit", tilausRepository.findByIdActive(id));
+        model.addAttribute("asiakkaat", asiakasRepository.findAllActive());
+        model.addAttribute("tyontekijat", tyontekijaRepository.findAllActive());
         model.addAttribute("tilausrivit", tilausriviRepository.findAll());
         return "/tilausEdit";
     }
 
     // Save an edited tilaus
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tilausSaveEdited")
     public String saveEditedTilaus(@Valid @ModelAttribute("tilaus") Tilaus tilaus, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("tilausEdit", tilaus);
-            model.addAttribute("asiakkaat", asiakasRepository.findAll());
-            model.addAttribute("tyontekijat", tyontekijaRepository.findAll());
+            model.addAttribute("asiakkaat", asiakasRepository.findAllActive());
+            model.addAttribute("tyontekijat", tyontekijaRepository.findAllActive());
             model.addAttribute("tilausrivit", tilausriviRepository.findAll());
             return "/tilausEdit";
         }
@@ -102,7 +100,12 @@ public class TilausController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tilausDelete/{id}")
     public String deleteTilaus(@PathVariable("id") Long id, Model model) {
-        tilausRepository.deleteById(id);
+        Tilaus tilaus = tilausRepository.findByIdActive(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tilaus not found"));
+        
+        tilaus.delete();
+
+        tilausRepository.save(tilaus);
         return "redirect:/tilausList";
     }
 

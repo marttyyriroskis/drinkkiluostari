@@ -38,15 +38,11 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
         <td th:text="${tilaus.tyontekija.sukunimi}"></td>
         <td th:text="${tilaus.asiakas.nimi}"></td></td>
         <td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/tilausDelete/{id}(id=${tilaus.id})}">Poista</a></td>
-        <td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/tilausEdit/{id}(id=${tilaus.id})}">Muokkaa</a></td>
+        <a th:href="@{/tilausEdit/{id}(id=${tilaus.id})}">Muokkaa</a>
       </tr>
     </table>
 
-    <p>
-      <td sec:authorize="hasAuthority('ADMIN')">
-        <a href="/tilausNew">Lisää uusi tilaus</a>
-      </td>
-      </p>
+    <p><a href="/tilausNew">Lisää uusi tilaus</a></p>
     <a href="/index">Palaa kotisivulle</a>
   </body>
 </html>

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -82,6 +83,7 @@ public class RestTilausController {
     }
     
     // Edit tilaus
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<TilausDTO> editTilaus(@Valid @RequestBody TilausDTO tilausDTO, @PathVariable Long id) {
         Tilaus tilaus = tilausRepository.findById(id)
@@ -103,9 +105,10 @@ public class RestTilausController {
     }
 
     // Delete tilaus
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Tilaus> deleteTilaus(@PathVariable Long id) {
-        Tilaus tilaus = tilausRepository.findById(id)
+        Tilaus tilaus = tilausRepository.findByIdActive(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tilaus not found"));
         
         tilaus.delete();

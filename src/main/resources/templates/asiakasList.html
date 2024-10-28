@@ -43,16 +43,11 @@
         <td sec:authorize="hasAuthority('ADMIN')">
           <a th:href="@{/asiakasDelete/{id}(id=${asiakas.id})}">Poista</a>
         </td>
-        <td sec:authorize="hasAuthority('ADMIN')">
           <a th:href="@{/asiakasEdit/{id}(id=${asiakas.id})}">Muokkaa</a>
-        </td>
       </tr>
     </table>
 
-    <p>
-      <td sec:authorize="hasAuthority('ADMIN')">
-        <a href="/asiakasNew">Lisää uusi asiakas</a>
-      </td>
+    <p><a href="/asiakasNew">Lisää uusi asiakas</a></td>
     </p>
     <a href="/index">Palaa kotisivulle</a>
   </body>

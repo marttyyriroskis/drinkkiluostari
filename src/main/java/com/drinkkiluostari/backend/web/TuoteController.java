@@ -1,5 +1,6 @@
 package com.drinkkiluostari.backend.web;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.drinkkiluostari.backend.repository.TuoteRepository;
 import com.drinkkiluostari.backend.domain.Tuote;
@@ -33,7 +35,7 @@ public class TuoteController {
     // Get tuotteet
     @GetMapping("/tuoteList")
     public String getTuotteet(Model model) {
-        model.addAttribute("tuotteet", tuoteRepository.findAll());
+        model.addAttribute("tuotteet", tuoteRepository.findAllActive());
         return "/tuoteList";
     }
 
@@ -65,7 +67,7 @@ public class TuoteController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tuoteEdit/{id}")
     public String editTuote(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("tuoteEdit", tuoteRepository.findById(id));
+        model.addAttribute("tuoteEdit", tuoteRepository.findByIdActive(id));
         model.addAttribute("kategoriat", kategoriaRepository.findAll());
         model.addAttribute("tilausrivit", tilausriviRepository.findAll());
         return "/tuoteEdit";
@@ -94,7 +96,12 @@ public class TuoteController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tuoteDelete/{id}")
     public String deleteTuote(@PathVariable("id") Long id, Model model) {
-        tuoteRepository.deleteById(id);
+        Tuote tuote = tuoteRepository.findByIdActive(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tuote not found"));
+        
+        tuote.delete();
+
+        tuoteRepository.save(tuote);
         return "redirect:/tuoteList";
     }
 
