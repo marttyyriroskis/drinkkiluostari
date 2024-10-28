@@ -44,7 +44,6 @@ public class WebSecurityConfig {
             .disable())
         )
         .formLogin(formlogin -> formlogin
-            //.loginPage("/login") TODO: login.html
             .defaultSuccessUrl("/index", true)
             .permitAll()
         )

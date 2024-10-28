@@ -37,7 +37,6 @@ public class RestAsiakasTest {
             .andExpect(status().isOk());
     }
 
-    // TODO: How does this differ from the one above?
     @Test
     public void apiStatusOk() throws Exception {
         mockMvc.perform(get("/api/asiakkaat")).andExpect(status().isOk());
