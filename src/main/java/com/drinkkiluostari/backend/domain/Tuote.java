@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,7 @@ public class Tuote {
 
     private String nimi;
     private double hinta;
+    private LocalDateTime deletedAt;
 
     @ManyToOne
     @JoinColumn(name = "kategoria_id")
@@ -42,11 +44,10 @@ public class Tuote {
         this.hinta = hinta;
     }
 
-    public Tuote(String nimi, double hinta, Kategoria kategoria, List<Tilausrivi> tilausrivit) {
+    public Tuote(String nimi, double hinta, Kategoria kategoria) {
         this.nimi = nimi;
         this.hinta = hinta;
         this.kategoria = kategoria;
-        this.tilausrivit = tilausrivit;
     }
 
     public Long getId() {
@@ -71,6 +72,14 @@ public class Tuote {
 
     public void setHinta(double hinta) {
         this.hinta = hinta;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void delete() {
+        deletedAt = LocalDateTime.now();
     }
 
     public Kategoria getKategoria() {
@@ -102,8 +111,8 @@ public class Tuote {
 
     @Override
     public String toString() {
-        return "Tuote [id=" + id + ", nimi=" + nimi + ", hinta=" + hinta + ", kategoria=" + kategoria + ", tilausrivit="
-                + tilausrivit + "]";
+        return "Tuote [id=" + id + ", nimi=" + nimi + ", hinta=" + hinta + ", deletedAt=" + deletedAt + ", kategoria="
+                + kategoria + ", tilausrivit=" + tilausrivit + "]";
     }
 
 }

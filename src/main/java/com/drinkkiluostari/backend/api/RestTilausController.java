@@ -1,10 +1,11 @@
 package com.drinkkiluostari.backend.api;
 
 import java.util.List;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,12 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.drinkkiluostari.backend.domain.Tilaus;
-import com.drinkkiluostari.backend.domain.Tilausrivi;
 import com.drinkkiluostari.backend.repository.TilausRepository;
-import com.drinkkiluostari.backend.repository.TilausriviRepository;
 import com.drinkkiluostari.backend.domain.Asiakas;
 import com.drinkkiluostari.backend.repository.AsiakasRepository;
 import com.drinkkiluostari.backend.domain.Tyontekija;
+import com.drinkkiluostari.backend.dto.TilausDTO;
 import com.drinkkiluostari.backend.repository.TyontekijaRepository;
 
 import jakarta.validation.Valid;
@@ -34,137 +34,85 @@ public class RestTilausController {
     private final TilausRepository tilausRepository;
     private final AsiakasRepository asiakasRepository;
     private final TyontekijaRepository tyontekijaRepository;
-    private final TilausriviRepository tilausriviRepository;
     
-    public RestTilausController(TilausRepository tilausRepository, AsiakasRepository asiakasRepository, TyontekijaRepository tyontekijaRepository,
-    TilausriviRepository tilausriviRepository) {
+    public RestTilausController(TilausRepository tilausRepository, AsiakasRepository asiakasRepository, TyontekijaRepository tyontekijaRepository) {
         this.tilausRepository = tilausRepository;
         this.asiakasRepository = asiakasRepository;
         this.tyontekijaRepository = tyontekijaRepository;
-        this.tilausriviRepository = tilausriviRepository;
     }
 
     // Get tilaukset
-    @GetMapping("")
-    public Iterable<Tilaus> getTilaukset() {
-        return tilausRepository.findAll();
+    @GetMapping
+    public ResponseEntity<List<TilausDTO>> getTilaukset() {
+        Iterable<Tilaus> iterableTilaukset = tilausRepository.findAllActive();
+        List<Tilaus> tilausList = new ArrayList<>();
+        iterableTilaukset.forEach(tilausList::add);
+
+        return ResponseEntity.ok(tilausList.stream()
+                .map(Tilaus::toDTO)
+                .toList());
     }
     
     // Get tilaus by id
-    @GetMapping("{id}")
-    public Tilaus getTilaus(@PathVariable("id") Long tilausId) {
-        Tilaus tilaus = tilausRepository.findById(tilausId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tilaus not found"));
-        return tilaus;
+    @GetMapping("/{id}")
+    public ResponseEntity<TilausDTO> getTilaus(@PathVariable Long id) {
+        Tilaus tilaus = tilausRepository.findByIdActive(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tilaus not found"));
+        return ResponseEntity.ok(tilaus.toDTO());
     }
     
     // Post a new tilaus
-    @PostMapping("")
-    public Tilaus newTilaus(@Valid @RequestBody Tilaus tilaus) {
-        if (tilaus.getTyontekija() != null && tilaus.getTyontekija().getId() == null) {
-            tilaus.setTyontekija(null);
-        }
+    @PostMapping
+    public ResponseEntity<TilausDTO> newTilaus(@Valid @RequestBody TilausDTO tilausDTO) {
+        Tyontekija tyontekija = tyontekijaRepository.findById(tilausDTO.tyontekija().id())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Tyontekija not found"));
 
-        if (tilaus.getTyontekija() != null) {
-            Optional<Tyontekija> existingTyontekija = tyontekijaRepository.findById(tilaus.getTyontekija().getId());
-            if (!existingTyontekija.isPresent()) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "Tyontekija does not exist!");
-            }
-            tilaus.setTyontekija(existingTyontekija.get());
-        }
+        Asiakas asiakas = asiakasRepository.findById(tilausDTO.asiakas().id())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Asiakas not found"));
 
-        if (tilaus.getAsiakas() != null && tilaus.getAsiakas().getId() == null) {
-            tilaus.setAsiakas(null);
-        }
+        Tilaus tilaus = new Tilaus();
+        
+        tilaus.setPvm(LocalDateTime.now());
+        tilaus.setTyontekija(tyontekija);
+        tilaus.setAsiakas(asiakas);
 
-        if (tilaus.getAsiakas() != null) {
-            Optional<Asiakas> existingAsiakas = asiakasRepository.findById(tilaus.getAsiakas().getId());
-            if (!existingAsiakas.isPresent()) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "Asiakas does not exist!");
-            }
-            tilaus.setAsiakas(existingAsiakas.get());
-        }
+        tilausRepository.save(tilaus);
 
-        List<Tilausrivi> validTilausrivit = new ArrayList<>();
-        List<Tilausrivi> requestTilausrivit = tilaus.getTilausrivit();
-        for (Tilausrivi requestTilausrivi : requestTilausrivit) {
-            Optional<Tilausrivi> tilausrivi = tilausriviRepository.findById(requestTilausrivi.getId());
-            if (!tilausrivi.isPresent()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid tilausrivi");
-            }
-            validTilausrivit.add(tilausrivi.get());
-            tilausrivi.get().setTilaus(tilaus);
-        }
-        if (validTilausrivit.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No valid tilausrivit in Tilaus");
-        }
-
-        tilaus.setTilausrivit(validTilausrivit);
-        return tilausRepository.save(tilaus);
+        return ResponseEntity.status(HttpStatus.CREATED).body(tilaus.toDTO());
     }
     
     // Edit tilaus
-    @PutMapping("{id}")
-    public Tilaus editTilaus(@Valid @RequestBody Tilaus editedTilaus, @PathVariable Long tilausId) {
-        Tilaus tilaus = tilausRepository.findById(tilausId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tilaus not found"));
+    @PutMapping("/{id}")
+    public ResponseEntity<TilausDTO> editTilaus(@Valid @RequestBody TilausDTO tilausDTO, @PathVariable Long id) {
+        Tilaus tilaus = tilausRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tilaus not found"));
 
-        Tyontekija editedTyontekija = editedTilaus.getTyontekija();
-        if (editedTyontekija != null) {
-            Optional<Tyontekija> existingTyontekija = tyontekijaRepository.findById(editedTilaus.getTyontekija().getId());
-            if (!existingTyontekija.isPresent()) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "Invalid työntekijä");
-            }
-            tilaus.setTyontekija(existingTyontekija.get());
-        } else {
-            tilaus.setTyontekija(null);
-        }
+        Tyontekija tyontekija = tyontekijaRepository.findById(tilausDTO.tyontekija().id())
+            .orElseThrow(() -> new IllegalArgumentException("Invalid Tyontekija ID"));
 
-        Asiakas editedAsiakas = editedTilaus.getAsiakas();
-        if (editedAsiakas != null) {
-            Optional<Asiakas> existingAsiakas = asiakasRepository.findById(editedTilaus.getAsiakas().getId());
-            if (!existingAsiakas.isPresent()) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "Invalid asiakas");
-            }
-            tilaus.setAsiakas(existingAsiakas.get());
-        } else {
-            tilaus.setAsiakas(null);
-        }
+        Asiakas asiakas = asiakasRepository.findById(tilausDTO.asiakas().id())
+            .orElseThrow(() -> new IllegalArgumentException("Invalid Asiakas ID"));
 
-        List<Tilausrivi> validTilausrivit = new ArrayList<>();
-        for (Tilausrivi requestTilausrivi : editedTilaus.getTilausrivit()) {
-            Optional<Tilausrivi> tilausrivi = tilausriviRepository.findById(requestTilausrivi.getId());
-            if (!tilausrivi.isPresent()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid tilausrivi");
-            }
-            validTilausrivit.add(tilausrivi.get());
-            tilausrivi.get().setTilaus(tilaus);
-        }
-        if (validTilausrivit.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No valid tilausrivit in Tilaus");
-        }
+        tilaus.edit();
+        tilaus.setTyontekija(tyontekija);
+        tilaus.setAsiakas(asiakas);
+        
+        Tilaus updatedTilaus = tilausRepository.save(tilaus);
 
-        tilaus.setPvm(editedTilaus.getPvm());
-        tilaus.setTilausrivit(validTilausrivit);
-
-        return tilausRepository.save(tilaus);
+        return ResponseEntity.ok(updatedTilaus.toDTO());
     }
 
     // Delete tilaus
-    @DeleteMapping("{id}")
-    public Iterable<Tilaus> deleteTilaus(@PathVariable ("id") Long tilausId) {
-        Optional<Tilaus> optionalTilaus = tilausRepository.findById(tilausId);
-        if (!optionalTilaus.isPresent()) {
-            throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Tilaus not found");
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Tilaus> deleteTilaus(@PathVariable Long id) {
+        Tilaus tilaus = tilausRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tilaus not found"));
+        
+        tilaus.delete();
 
-        tilausRepository.deleteById(tilausId);
-        return tilausRepository.findAll();
+        tilausRepository.save(tilaus);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

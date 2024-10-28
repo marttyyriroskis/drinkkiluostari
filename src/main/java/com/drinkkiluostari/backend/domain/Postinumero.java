@@ -35,12 +35,6 @@ public class Postinumero {
         this.postitoimipaikka = postitoimipaikka;
     }
 
-    public Postinumero(String postinumero, String postitoimipaikka, List<Asiakas> asiakkaat) {
-        this.postinumero = postinumero;
-        this.postitoimipaikka = postitoimipaikka;
-        this.asiakkaat = asiakkaat;
-    }
-
     public Long getId() {
         return id;
     }
@@ -75,6 +69,7 @@ public class Postinumero {
 
     public PostinumeroDTO toDTO() {
         return new PostinumeroDTO(
+            this.id,
             this.postinumero,
             this.postitoimipaikka,
             

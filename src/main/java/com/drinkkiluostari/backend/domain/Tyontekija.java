@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,8 @@ public class Tyontekija {
     @Column(name = "sahkoposti", unique = true)
     private String sahkoposti;
 
+    private LocalDateTime deletedAt;
+
     @ManyToOne
     @JoinColumn(name = "rooli_id")
     private Rooli rooli;
@@ -38,25 +41,21 @@ public class Tyontekija {
     private List<Tilaus> tilaukset;
 
     public Tyontekija() {
-        // TODO: Generate sahkoposti from etunimi + sukunimi
     }
 
     public Tyontekija(String etunimi, String sukunimi, String sahkoposti, String salasana) {
-        // TODO: Generate sahkoposti from etunimi + sukunimi
         this.etunimi = etunimi;
         this.sukunimi = sukunimi;
-        this.sahkoposti = sahkoposti;
+        this.sahkoposti = etunimi + "." + sukunimi + "@sahkoposti.fi";
         this.salasana = salasana;
     }
 
-    public Tyontekija(String etunimi, String sukunimi, String sahkoposti, String salasana, Rooli rooli,
-            List<Tilaus> tilaukset) {
+    public Tyontekija(String etunimi, String sukunimi, String sahkoposti, String salasana, Rooli rooli) {
         this.etunimi = etunimi;
         this.sukunimi = sukunimi;
-        this.sahkoposti = sahkoposti;
+        this.sahkoposti = etunimi + "." + sukunimi + "@sahkoposti.fi";
         this.salasana = salasana;
         this.rooli = rooli;
-        this.tilaukset = tilaukset;
     }
 
     public Long getId() {
@@ -88,7 +87,7 @@ public class Tyontekija {
     }
 
     public void setSahkoposti(String sahkoposti) {
-        this.sahkoposti = sahkoposti;
+        this.sahkoposti = etunimi + "." + sukunimi + "@sahkoposti.fi";
     }
 
     public String getSalasana() {
@@ -97,6 +96,14 @@ public class Tyontekija {
 
     public void setSalasana(String salasana) {
         this.salasana = salasana;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void delete() {
+        deletedAt = LocalDateTime.now();
     }
 
     public Rooli getRooli() {
@@ -116,7 +123,9 @@ public class Tyontekija {
     }
     
     public TyontekijaDTO toDTO() {
-        return new TyontekijaDTO(this.etunimi,
+        return new TyontekijaDTO(
+            this.id,
+            this.etunimi,
             this.sukunimi,
             this.salasana,
             this.sahkoposti,
@@ -129,8 +138,9 @@ public class Tyontekija {
 
     @Override
     public String toString() {
-        return "Tyontekija [id=" + id + ", etunimi=" + etunimi + ", sukunimi=" + sukunimi + ", sahkoposti=" + sahkoposti
-                + ", salasana=" + salasana + ", rooli=" + rooli + ", tilaukset=" + tilaukset + "]";
+        return "Tyontekija [id=" + id + ", etunimi=" + etunimi + ", sukunimi=" + sukunimi + ", salasana=" + salasana
+                + ", sahkoposti=" + sahkoposti + ", deletedAt=" + deletedAt + ", rooli=" + rooli + ", tilaukset="
+                + tilaukset + "]";
     }
 
 }

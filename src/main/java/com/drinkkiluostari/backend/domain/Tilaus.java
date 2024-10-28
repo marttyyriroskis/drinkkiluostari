@@ -25,7 +25,7 @@ public class Tilaus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime pvm;
+    private LocalDateTime pvm, editedAt, deletedAt;
 
     @ManyToOne
     @JoinColumn(name = "tyontekija_id")
@@ -46,11 +46,10 @@ public class Tilaus {
         this.pvm = pvm;
     }
 
-    public Tilaus(LocalDateTime pvm, Tyontekija tyontekija, Asiakas asiakas, List<Tilausrivi> tilausrivit) {
+    public Tilaus(LocalDateTime pvm, Tyontekija tyontekija, Asiakas asiakas) {
         this.pvm = pvm;
         this.tyontekija = tyontekija;
         this.asiakas = asiakas;
-        this.tilausrivit = tilausrivit;
     }
 
     public Long getId() {
@@ -67,6 +66,22 @@ public class Tilaus {
 
     public void setPvm(LocalDateTime pvm) {
         this.pvm = pvm;
+    }
+
+    public LocalDateTime getEditedAt() {
+        return editedAt;
+    }
+
+    public void edit() {
+        editedAt = LocalDateTime.now();
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void delete() {
+        deletedAt = LocalDateTime.now();
     }
 
     public Tyontekija getTyontekija() {
@@ -106,8 +121,8 @@ public class Tilaus {
     
     @Override
     public String toString() {
-        return "Tilaus [id=" + id + ", pvm=" + pvm + ", tyontekija=" + tyontekija + ", asiakas=" + asiakas
-                + ", tilausrivit=" + tilausrivit + "]";
+        return "Tilaus [id=" + id + ", pvm=" + pvm + ", editedAt=" + editedAt + ", deletedAt=" + deletedAt
+                + ", tyontekija=" + tyontekija + ", asiakas=" + asiakas + ", tilausrivit=" + tilausrivit + "]";
     }
 
 }

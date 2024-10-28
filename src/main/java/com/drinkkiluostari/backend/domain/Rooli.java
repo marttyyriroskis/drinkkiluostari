@@ -34,11 +34,6 @@ public class Rooli {
         this.nimi = nimi;
     }
 
-    public Rooli(String nimi, List<Tyontekija> tyontekijat) {
-        this.nimi = nimi;
-        this.tyontekijat = tyontekijat;
-    }
-
     public Long getId() {
         return id;
     }
@@ -64,7 +59,9 @@ public class Rooli {
     }
 
     public RooliDTO toDTO() {
-        return new RooliDTO(this.nimi,
+        return new RooliDTO(
+            this.id,
+            this.nimi,
             
             this.tyontekijat.stream()
                 .map(Tyontekija::getId)

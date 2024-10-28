@@ -1,5 +1,7 @@
 package com.drinkkiluostari.backend.domain;
 
+import java.time.LocalDateTime;
+
 import com.drinkkiluostari.backend.dto.AsiakasDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,6 +27,8 @@ public class Asiakas {
 
     private String nimi, katuosoite, yTunnus;
 
+    private LocalDateTime deletedAt;
+
     @ManyToOne
     @JoinColumn(name = "postinumero")
     private Postinumero postinumero;
@@ -42,12 +46,11 @@ public class Asiakas {
         this.yTunnus = yTunnus;
     }
 
-    public Asiakas(String nimi, String katuosoite, String yTunnus, Postinumero postinumero, List<Tilaus> tilaukset) {
+    public Asiakas(String nimi, String katuosoite, String yTunnus, Postinumero postinumero) {
         this.nimi = nimi;
         this.katuosoite = katuosoite;
         this.yTunnus = yTunnus;
         this.postinumero = postinumero;
-        this.tilaukset = tilaukset;
     }
 
     public Long getId() {
@@ -98,8 +101,17 @@ public class Asiakas {
         this.tilaukset = tilaukset;
     }    
 
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void delete() {
+        deletedAt = LocalDateTime.now();
+    }
+
     public AsiakasDTO toDTO() {
         return new AsiakasDTO(
+            this.id,
             this.nimi,
             this.katuosoite,
             this.yTunnus,
@@ -113,7 +125,9 @@ public class Asiakas {
     @Override
     public String toString() {
         return "Asiakas [id=" + id + ", nimi=" + nimi + ", katuosoite=" + katuosoite + ", yTunnus=" + yTunnus
-                + ", postinumero=" + postinumero + ", tilaukset=" + tilaukset + "]";
+                + ", deletedAt=" + deletedAt + ", postinumero=" + postinumero + ", tilaukset=" + tilaukset + "]";
     }
+
+    
 
 }

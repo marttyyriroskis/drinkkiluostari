@@ -2,7 +2,6 @@ package com.drinkkiluostari.backend.api;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +21,6 @@ import com.drinkkiluostari.backend.dto.AsiakasDTO;
 import com.drinkkiluostari.backend.repository.AsiakasRepository;
 import com.drinkkiluostari.backend.domain.Postinumero;
 import com.drinkkiluostari.backend.repository.PostinumeroRepository;
-import com.drinkkiluostari.backend.domain.Tilaus;
-import com.drinkkiluostari.backend.repository.TilausRepository;
 
 import jakarta.validation.Valid;
 
@@ -33,12 +30,10 @@ import jakarta.validation.Valid;
 public class RestAsiakasController {
     private final AsiakasRepository asiakasRepository;
     private final PostinumeroRepository postinumeroRepository;
-    private final TilausRepository tilausRepository;
     
-    public RestAsiakasController(AsiakasRepository asiakasRepository, PostinumeroRepository postinumeroRepository, TilausRepository tilausRepository) {
+    public RestAsiakasController(AsiakasRepository asiakasRepository, PostinumeroRepository postinumeroRepository) {
         this.asiakasRepository = asiakasRepository;
         this.postinumeroRepository = postinumeroRepository;
-        this.tilausRepository = tilausRepository;
     }
 
     // Get asiakkaat
@@ -54,94 +49,60 @@ public class RestAsiakasController {
     }
     
     // Get asiakas by id
-    @GetMapping("{id}")
-    public Asiakas getAsiakas(@PathVariable("id") Long asiakasId) {
-        Asiakas asiakas = asiakasRepository.findById(asiakasId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Asiakas not found"));
-        return asiakas;
+    @GetMapping("/{id}")
+    public ResponseEntity<AsiakasDTO> getAsiakas(@PathVariable Long id) {
+        Asiakas asiakas = asiakasRepository.findByIdActive(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Asiakas not found"));
+        return ResponseEntity.ok(asiakas.toDTO());
     }
     
     // Post a new asiakas
-    @PostMapping("")
-    public Asiakas newAsiakas(@Valid @RequestBody Asiakas asiakas) {
-        if (asiakas.getPostinumero() != null && asiakas.getPostinumero().getId() == null) {
-            asiakas.setPostinumero(null);
-        }
+    @PostMapping
+    public ResponseEntity<AsiakasDTO> newAsiakas(@Valid @RequestBody AsiakasDTO asiakasDTO) {
+        Postinumero postinumero = postinumeroRepository.findById(asiakasDTO.postinumero().id())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Postinumero not found"));
 
-        if (asiakas.getPostinumero() != null) {
-            Optional<Postinumero> existingPostinumero = postinumeroRepository.findById(asiakas.getPostinumero().getId());
-            if (!existingPostinumero.isPresent()) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "Postinumero does not exist!");
-            }
-            asiakas.setPostinumero(existingPostinumero.get());
-        }
+        Asiakas asiakas = new Asiakas();
+        asiakas.setNimi(asiakasDTO.nimi());
+        asiakas.setKatuosoite(asiakasDTO.katuosoite());
+        asiakas.setyTunnus(asiakasDTO.yTunnus());
+        asiakas.setPostinumero(postinumero);
 
-        List<Tilaus> validTilaukset = new ArrayList<>();
-        List<Tilaus> requestTilaukset = asiakas.getTilaukset();
-        for (Tilaus requestTilaus : requestTilaukset) {
-            Optional<Tilaus> tilaus = tilausRepository.findById(requestTilaus.getId());
-            if (!tilaus.isPresent()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid tilaus");
-            }
-            validTilaukset.add(tilaus.get());
-            tilaus.get().setAsiakas(asiakas);
-        }
-        if (validTilaukset.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No valid tilaukset in Asiakas");
-        }
+        asiakasRepository.save(asiakas);
 
-        asiakas.setTilaukset(validTilaukset);
-        return asiakasRepository.save(asiakas);
+        return ResponseEntity.status(HttpStatus.CREATED).body(asiakas.toDTO());
     }
     
     // Edit asiakas
-    @PutMapping("{id}")
-    public Asiakas editAsiakas(@Valid @RequestBody Asiakas editedAsiakas, @PathVariable Long asiakasId) {
-        Asiakas asiakas = asiakasRepository.findById(asiakasId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Asiakas not found"));
+    @PutMapping("/{id}")
+    public ResponseEntity<AsiakasDTO> editAsiakas(@Valid @RequestBody AsiakasDTO asiakasDTO, @PathVariable Long id) {
+        Asiakas asiakas = asiakasRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Asiakas not found"));
 
-        Postinumero editedPostinumero = editedAsiakas.getPostinumero();
-        if (editedPostinumero != null) {
-            Optional<Postinumero> existingPostinumero = postinumeroRepository.findById(editedPostinumero.getId());
-            if (!existingPostinumero.isPresent()) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "Invalid postinumero");
-            }
-            asiakas.setPostinumero(existingPostinumero.get());
-        } else {
-            asiakas.setPostinumero(null);
-        }
+        Postinumero postinumero = postinumeroRepository.findById(asiakasDTO.postinumero().id())
+            .orElseThrow(() -> new IllegalArgumentException("Invalid Postinumero ID"));
 
-        List<Tilaus> validTilaukset = new ArrayList<>();
-        for (Tilaus requestTilaus : editedAsiakas.getTilaukset()) {
-            Optional<Tilaus> tilaus = tilausRepository.findById(requestTilaus.getId());
-            if (!tilaus.isPresent()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid tilaus");
-            }
-            validTilaukset.add(tilaus.get());
-            tilaus.get().setAsiakas(asiakas);
-        }
+        asiakas.setNimi(asiakasDTO.nimi());
+        asiakas.setKatuosoite(asiakasDTO.katuosoite());
+        asiakas.setyTunnus(asiakasDTO.yTunnus());
+        asiakas.setPostinumero(postinumero);
+        
+        Asiakas updatedAsiakas = asiakasRepository.save(asiakas);
 
-        asiakas.setNimi(editedAsiakas.getNimi());
-        asiakas.setKatuosoite(editedAsiakas.getKatuosoite());
-        asiakas.setyTunnus(editedAsiakas.getyTunnus());
-        asiakas.setTilaukset(validTilaukset);
-
-        return asiakasRepository.save(asiakas);
+        return ResponseEntity.ok(updatedAsiakas.toDTO());
     }
 
     // Delete asiakas
-    @DeleteMapping("{id}")
-    public Iterable<Asiakas> deleteAsiakas(@PathVariable ("id") Long asiakasId) {
-        Optional<Asiakas> optionalAsiakas = asiakasRepository.findById(asiakasId);
-        if (!optionalAsiakas.isPresent()) {
-            throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Asiakas not found");
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Asiakas> deleteAsiakas(@PathVariable Long id) {
+        Asiakas asiakas = asiakasRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Asiakas not found"));
 
-        asiakasRepository.deleteById(asiakasId);
-        return asiakasRepository.findAll();
+        asiakas.delete();
+
+        asiakasRepository.save(asiakas);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

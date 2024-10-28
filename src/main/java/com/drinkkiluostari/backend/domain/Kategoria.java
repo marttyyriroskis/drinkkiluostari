@@ -34,11 +34,6 @@ public class Kategoria {
         this.nimi = nimi;
     }
 
-    public Kategoria(String nimi, List<Tuote> tuotteet) {
-        this.nimi = nimi;
-        this.tuotteet = tuotteet;
-    }
-
     public Long getId() {
         return id;
     }
@@ -64,7 +59,9 @@ public class Kategoria {
     }
 
     public KategoriaDTO toDTO() {
-        return new KategoriaDTO(this.nimi,
+        return new KategoriaDTO(
+            this.id,
+            this.nimi,
             
             this.tuotteet.stream()
                 .map(Tuote::getId)
