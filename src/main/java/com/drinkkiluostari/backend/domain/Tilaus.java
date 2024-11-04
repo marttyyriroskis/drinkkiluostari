@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +26,10 @@ public class Tilaus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime pvm, editedAt, deletedAt;
+    @NotNull
+    private LocalDateTime pvm;
+    
+    private LocalDateTime editedAt, deletedAt;
 
     @ManyToOne
     @JoinColumn(name = "tyontekija_id")

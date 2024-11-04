@@ -72,6 +72,8 @@ public class DrinkkiluostariApplication {
 			log.info("Creating tyontekija test entries");
 			tyontekijaRepository.save(new Tyontekija("Juha", "Juhanen", "juha.juhanen@sahkoposti.fi", "$2a$10$es76Go.W1/f5/Jms3SBvnuVG20qxUXzXq1KYvJUTxYH6PLxABzafO"));
 			tyontekijaRepository.save(new Tyontekija("Marja", "Marjanen", "marja.marjanen@sahkoposti.fi", "$2a$10$uZpnGGH1amn9MEKspLG/Q.PUe58g7Ti8It3y9EWNt/1WcEk6GocdO"));
+			// USER credentials: juha.juhanen@sahkoposti.fi, user
+			// ADMIN credentials: marja.marjanen@sahkoposti.fi, admin
 
 			log.info("Adding relationships...");
 			Asiakas asiakas1 = asiakasRepository.findById(1L).get();

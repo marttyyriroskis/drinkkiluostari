@@ -10,6 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +23,11 @@ public class Postinumero {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String postinumero, postitoimipaikka;
+    @NotNull
+    private String postinumero;
+    
+    @Size(min = 1, max = 100)
+    private String postitoimipaikka;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postinumero", orphanRemoval = true)
     @JsonIgnore

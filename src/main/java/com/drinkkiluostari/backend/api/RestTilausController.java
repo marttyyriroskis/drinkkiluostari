@@ -83,7 +83,6 @@ public class RestTilausController {
     }
     
     // Edit tilaus
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<TilausDTO> editTilaus(@Valid @RequestBody TilausDTO tilausDTO, @PathVariable Long id) {
         Tilaus tilaus = tilausRepository.findById(id)

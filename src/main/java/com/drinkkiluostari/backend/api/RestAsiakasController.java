@@ -58,7 +58,6 @@ public class RestAsiakasController {
     }
     
     // Post a new asiakas
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<AsiakasDTO> newAsiakas(@Valid @RequestBody AsiakasDTO asiakasDTO) {
         Postinumero postinumero = postinumeroRepository.findById(asiakasDTO.postinumero().id())
@@ -76,7 +75,6 @@ public class RestAsiakasController {
     }
     
     // Edit asiakas
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<AsiakasDTO> editAsiakas(@Valid @RequestBody AsiakasDTO asiakasDTO, @PathVariable Long id) {
         Asiakas asiakas = asiakasRepository.findById(id)

@@ -14,6 +14,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +27,14 @@ public class Asiakas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nimi, katuosoite, yTunnus;
+    @Size(min = 1, max = 100)
+    private String nimi;
+    
+    @Size(min = 1, max = 100)
+    private String katuosoite;
+    
+    @NotNull
+    private String yTunnus;
 
     private LocalDateTime deletedAt;
 

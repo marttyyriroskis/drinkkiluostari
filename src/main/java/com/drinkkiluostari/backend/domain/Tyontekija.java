@@ -13,6 +13,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,8 +27,16 @@ public class Tyontekija {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String etunimi, sukunimi, salasana;
+    @Size(min = 1, max = 50)
+    private String etunimi;
+    
+    @Size(min = 1, max = 50)
+    private String sukunimi;
+    
+    @NotNull
+    private String salasana;
 
+    @Size(min = 1, max = 100)
     @Column(name = "sahkoposti", unique = true)
     private String sahkoposti;
 

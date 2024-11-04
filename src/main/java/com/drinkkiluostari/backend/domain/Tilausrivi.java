@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.PositiveOrZero;
+
 import com.drinkkiluostari.backend.dto.TilausriviDTO;
 
 @Entity
@@ -16,7 +18,13 @@ public class Tilausrivi {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private double hinta, alennus;
+    @PositiveOrZero
+    private double hinta;
+    
+    @PositiveOrZero
+    private double alennus;
+
+    @PositiveOrZero
     private int maara;
 
     @ManyToOne
