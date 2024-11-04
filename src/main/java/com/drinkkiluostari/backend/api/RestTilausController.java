@@ -1,7 +1,6 @@
 package com.drinkkiluostari.backend.api;
 
 import java.util.List;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.springframework.http.HttpStatus;
@@ -73,7 +72,7 @@ public class RestTilausController {
 
         Tilaus tilaus = new Tilaus();
         
-        tilaus.setPvm(LocalDateTime.now());
+        tilaus.create();
         tilaus.setTyontekija(tyontekija);
         tilaus.setAsiakas(asiakas);
 

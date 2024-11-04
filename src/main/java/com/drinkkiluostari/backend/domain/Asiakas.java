@@ -3,7 +3,6 @@ package com.drinkkiluostari.backend.domain;
 import java.time.LocalDateTime;
 
 import com.drinkkiluostari.backend.dto.AsiakasDTO;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -27,23 +26,24 @@ public class Asiakas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 100, message = "Nimen pitää olla 1-100 merkkiä pitkä")
     private String nimi;
     
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 100, message = "Katuosoitteen pitää olla 1-100 merkkiä pitkä")
     private String katuosoite;
     
-    @NotNull
+    @NotNull(message = "Y-tunnus ei saa olla tyhjä")
+    @JoinColumn(name = "y_tunnus")
     private String yTunnus;
 
+    @JoinColumn(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @ManyToOne
-    @JoinColumn(name = "postinumero")
+    @JoinColumn(name = "postinumero_id")
     private Postinumero postinumero;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "asiakas", orphanRemoval = true)
-    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "asiakas")
     private List<Tilaus> tilaukset;
 
     public Asiakas() {

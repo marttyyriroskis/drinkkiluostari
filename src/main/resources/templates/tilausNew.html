@@ -11,11 +11,7 @@
     <h1>Lisää uusi tilaus</h1>
     <div>
         <form action="#" th:object="${tilaus}" th:action="@{/tilausSave}" method="post">
-            <div>
-                <label>Päivämäärä</label>
-                <input type="datetime-local" th:field="*{pvm}" />
-                <div th:if="${#fields.hasErrors('pvm')}" th:errors="*{pvm}">Error</div>
-            </div>
+                <input type="hidden" th:field="*{pvm}" />
 
             <div style="clear: both; display: block; height: 10px;"></div>
             <label for="tyontekijaList">Työntekijä</label>

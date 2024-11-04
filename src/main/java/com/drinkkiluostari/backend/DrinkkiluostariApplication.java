@@ -1,41 +1,20 @@
 package com.drinkkiluostari.backend;
 
-import java.time.LocalDateTime;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import com.drinkkiluostari.backend.domain.Asiakas;
-import com.drinkkiluostari.backend.domain.Kategoria;
-import com.drinkkiluostari.backend.domain.Postinumero;
-import com.drinkkiluostari.backend.domain.Rooli;
-import com.drinkkiluostari.backend.domain.Tilaus;
-import com.drinkkiluostari.backend.domain.Tilausrivi;
-import com.drinkkiluostari.backend.domain.Tuote;
-import com.drinkkiluostari.backend.domain.Tyontekija;
-import com.drinkkiluostari.backend.repository.AsiakasRepository;
-import com.drinkkiluostari.backend.repository.KategoriaRepository;
-import com.drinkkiluostari.backend.repository.PostinumeroRepository;
-import com.drinkkiluostari.backend.repository.RooliRepository;
-import com.drinkkiluostari.backend.repository.TilausRepository;
-import com.drinkkiluostari.backend.repository.TilausriviRepository;
-import com.drinkkiluostari.backend.repository.TuoteRepository;
-import com.drinkkiluostari.backend.repository.TyontekijaRepository;
 
 @SpringBootApplication
 public class DrinkkiluostariApplication {
+	// USER credentials: juha.juhanen@sahkoposti.fi, kayttaja
+	// ADMIN credentials: Marja.Marjanen@sahkoposti.fi, admin
 
-	private static final Logger log = LoggerFactory.getLogger(DrinkkiluostariApplication.class);
+	// private static final Logger log = LoggerFactory.getLogger(DrinkkiluostariApplication.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(DrinkkiluostariApplication.class, args);
 	}
 
+	/*
 	@Bean
 	public CommandLineRunner demo(AsiakasRepository asiakasRepository, KategoriaRepository kategoriaRepository, PostinumeroRepository
 	postinumeroRepository, RooliRepository rooliRepository, TilausRepository tilausRepository, TilausriviRepository tilausRiviRepository,
@@ -72,9 +51,7 @@ public class DrinkkiluostariApplication {
 			log.info("Creating tyontekija test entries");
 			tyontekijaRepository.save(new Tyontekija("Juha", "Juhanen", "juha.juhanen@sahkoposti.fi", "$2a$10$es76Go.W1/f5/Jms3SBvnuVG20qxUXzXq1KYvJUTxYH6PLxABzafO"));
 			tyontekijaRepository.save(new Tyontekija("Marja", "Marjanen", "marja.marjanen@sahkoposti.fi", "$2a$10$uZpnGGH1amn9MEKspLG/Q.PUe58g7Ti8It3y9EWNt/1WcEk6GocdO"));
-			// USER credentials: juha.juhanen@sahkoposti.fi, user
-			// ADMIN credentials: marja.marjanen@sahkoposti.fi, admin
-
+			
 			log.info("Adding relationships...");
 			Asiakas asiakas1 = asiakasRepository.findById(1L).get();
 			Asiakas asiakas2 = asiakasRepository.findById(2L).get();
@@ -126,5 +103,5 @@ public class DrinkkiluostariApplication {
 			tyontekijaRepository.save(tyontekija2);
 		};
 	}
-
+*/
 }

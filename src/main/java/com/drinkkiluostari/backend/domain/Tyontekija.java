@@ -1,7 +1,6 @@
 package com.drinkkiluostari.backend.domain;
 
 import com.drinkkiluostari.backend.dto.TyontekijaDTO;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -27,27 +26,27 @@ public class Tyontekija {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 50, message = "Etunimen pitää olla 1-50 merkkiä pitkä")
     private String etunimi;
     
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 50, message = "Sukunimen pitää olla 1-50 merkkiä pitkä")
     private String sukunimi;
     
-    @NotNull
-    private String salasana;
-
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 100, message = "Sähköpostin pitää olla 1-100 merkkiä pitkä")
     @Column(name = "sahkoposti", unique = true)
     private String sahkoposti;
 
+    @NotNull(message = "Salasana ei saa olla tyhjä")
+    private String salasana;
+    
+    @JoinColumn(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @ManyToOne
     @JoinColumn(name = "rooli_id")
     private Rooli rooli;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tyontekija", orphanRemoval = true)
-    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tyontekija")
     private List<Tilaus> tilaukset;
 
     public Tyontekija() {
@@ -97,7 +96,7 @@ public class Tyontekija {
     }
 
     public void setSahkoposti(String sahkoposti) {
-        this.sahkoposti = etunimi + "." + sukunimi + "@sahkoposti.fi";
+        this.sahkoposti = sahkoposti;
     }
 
     public String getSalasana() {

@@ -3,7 +3,6 @@ package com.drinkkiluostari.backend.domain;
 import java.time.LocalDateTime;
 
 import com.drinkkiluostari.backend.dto.TilausDTO;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -14,7 +13,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,10 +24,13 @@ public class Tilaus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     private LocalDateTime pvm;
     
-    private LocalDateTime editedAt, deletedAt;
+    @JoinColumn(name = "edited_at")
+    private LocalDateTime editedAt;
+
+    @JoinColumn(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     @ManyToOne
     @JoinColumn(name = "tyontekija_id")
@@ -39,19 +40,14 @@ public class Tilaus {
     @JoinColumn(name = "asiakas_id")
     private Asiakas asiakas;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tilaus", orphanRemoval = true)
-    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tilaus")
     private List<Tilausrivi> tilausrivit;
 
     public Tilaus() {
     }
 
-    public Tilaus(LocalDateTime pvm) {
-        this.pvm = pvm;
-    }
-
     public Tilaus(LocalDateTime pvm, Tyontekija tyontekija, Asiakas asiakas) {
-        this.pvm = pvm;
+        this.pvm = LocalDateTime.now();
         this.tyontekija = tyontekija;
         this.asiakas = asiakas;
     }
@@ -68,8 +64,8 @@ public class Tilaus {
         return pvm;
     }
 
-    public void setPvm(LocalDateTime pvm) {
-        this.pvm = pvm;
+    public void create() {
+        pvm = LocalDateTime.now();
     }
 
     public LocalDateTime getEditedAt() {

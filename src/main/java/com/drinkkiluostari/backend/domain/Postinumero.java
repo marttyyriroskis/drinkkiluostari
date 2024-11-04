@@ -1,7 +1,6 @@
 package com.drinkkiluostari.backend.domain;
 
 import com.drinkkiluostari.backend.dto.PostinumeroDTO;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -23,14 +22,13 @@ public class Postinumero {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "Postinumero ei saa olla tyhjä")
     private String postinumero;
     
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 100, message = "Postitoimipaikan pitää olla 1-100 merkkiä pitkä")
     private String postitoimipaikka;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postinumero", orphanRemoval = true)
-    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postinumero")
     private List<Asiakas> asiakkaat;
 
     public Postinumero() {

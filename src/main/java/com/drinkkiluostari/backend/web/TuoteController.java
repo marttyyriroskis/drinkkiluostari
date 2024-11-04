@@ -1,5 +1,8 @@
 package com.drinkkiluostari.backend.web;
 
+import java.util.Comparator;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -35,7 +38,9 @@ public class TuoteController {
     // Get tuotteet
     @GetMapping("/tuoteList")
     public String getTuotteet(Model model) {
-        model.addAttribute("tuotteet", tuoteRepository.findAllActive());
+        List<Tuote> tuotteet = tuoteRepository.findAllActive();
+        tuotteet.sort(Comparator.comparing(Tuote::getId));
+        model.addAttribute("tuotteet", tuotteet);
         return "/tuoteList";
     }
 

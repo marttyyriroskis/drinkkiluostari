@@ -1,5 +1,8 @@
 package com.drinkkiluostari.backend.web;
 
+import java.util.Comparator;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -35,7 +38,9 @@ public class TyontekijaController {
     // Get työntekijät
     @GetMapping("/tyontekijaList")
     public String getTyontekijat(Model model) {
-        model.addAttribute("tyontekijat", tyontekijaRepository.findAllActive());
+        List<Tyontekija> tyontekijat = tyontekijaRepository.findAllActive();
+        tyontekijat.sort(Comparator.comparing(Tyontekija::getId));
+        model.addAttribute("tyontekijat", tyontekijat);
         return "/tyontekijaList";
     }
 

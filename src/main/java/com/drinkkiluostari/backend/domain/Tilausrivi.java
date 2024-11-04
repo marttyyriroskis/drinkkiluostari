@@ -18,13 +18,13 @@ public class Tilausrivi {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @PositiveOrZero
+    @PositiveOrZero(message = "Hinnan pitää olla 0 tai enemmän")
     private double hinta;
     
-    @PositiveOrZero
+    @PositiveOrZero(message = "Alennuksen pitää olla 0 tai enemmän")
     private double alennus;
 
-    @PositiveOrZero
+    @PositiveOrZero(message = "Määrän pitää olla 0 tai enemmän")
     private int maara;
 
     @ManyToOne

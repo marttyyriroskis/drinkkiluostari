@@ -1,7 +1,6 @@
 package com.drinkkiluostari.backend.domain;
 
 import com.drinkkiluostari.backend.dto.TuoteDTO;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -26,20 +25,20 @@ public class Tuote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 100, message = "Nimen pitää olla 1-100 merkkiä pitkä")
     private String nimi;
 
-    @PositiveOrZero
+    @PositiveOrZero(message = "Hinnan pitää olla 0 tai enemmän")
     private double hinta;
 
+    @JoinColumn(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @ManyToOne
     @JoinColumn(name = "kategoria_id")
     private Kategoria kategoria;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tuote", orphanRemoval = true)
-    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tuote")
     private List<Tilausrivi> tilausrivit;
 
     public Tuote() {

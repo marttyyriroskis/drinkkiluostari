@@ -30,11 +30,7 @@
                 <div th:if="${#fields.hasErrors('sahkoposti')}" th:errors="*{sahkoposti}">Error</div>
             </div>
 
-            <div>
-                <label>Salasana</label>
-                <input type="text" th:field="*{salasana}" />
-                <div th:if="${#fields.hasErrors('salasana')}" th:errors="*{salasana}">Error</div>
-            </div>
+                <input type="hidden" th:field="*{salasana}" />
 
             <div>
                 <label for="rooliList">Roolit</label>

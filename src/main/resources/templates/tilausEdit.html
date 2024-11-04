@@ -12,11 +12,7 @@
     <div>
         <form th:object="${tilausEdit}" th:action="@{/tilausSaveEdited}" action="#" method="post">
             <input type="hidden" id="id" th:field="*{id}" />
-            <div>
-                <label>Päivämäärä</label>
-                <input type="datetime-local" th:field="*{pvm}" />
-                <div th:if="${#fields.hasErrors('pvm')}" th:errors="*{pvm}">Error</div>
-            </div>
+                <input type="hidden" th:field="*{pvm}" />
 
             <div>
                 <label for="tyontekijaList">Työntekijät</label>

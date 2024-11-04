@@ -29,7 +29,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
         <th>Työntekijä</th>
         <th>Asiakas</th>
         <th sec:authorize="hasAuthority('ADMIN')"> </th>
-        <th sec:authorize="hasAuthority('ADMIN')"></th>
+        <th></th>
       </tr>
 
       <tr th:each="tilaus : ${tilaukset}">
@@ -38,7 +38,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
         <td th:text="${tilaus.tyontekija.sukunimi}"></td>
         <td th:text="${tilaus.asiakas.nimi}"></td></td>
         <td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/tilausDelete/{id}(id=${tilaus.id})}">Poista</a></td>
-        <a th:href="@{/tilausEdit/{id}(id=${tilaus.id})}">Muokkaa</a>
+        <td><a th:href="@{/tilausEdit/{id}(id=${tilaus.id})}">Muokkaa</a></td>
       </tr>
     </table>
 

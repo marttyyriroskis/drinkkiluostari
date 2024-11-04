@@ -1,5 +1,8 @@
 package com.drinkkiluostari.backend.web;
 
+import java.util.Comparator;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -39,7 +42,9 @@ public class TilausController {
     // Get tilaukset
     @GetMapping("/tilausList")
     public String getTilaukset(Model model) {
-        model.addAttribute("tilaukset", tilausRepository.findAllActive());
+        List<Tilaus> tilaukset = tilausRepository.findAllActive();
+        tilaukset.sort(Comparator.comparing(Tilaus::getId));
+        model.addAttribute("tilaukset", tilaukset);
         return "/tilausList";
     }
 
@@ -63,6 +68,9 @@ public class TilausController {
             model.addAttribute("tilausrivit", tilausriviRepository.findAll());
             return "/tilausNew";
         }
+
+        tilaus.create();
+
         tilausRepository.save(tilaus);
         return "redirect:/tilausList";
     }
@@ -91,6 +99,8 @@ public class TilausController {
         if (tilaus.getAsiakas() != null && tilaus.getAsiakas().getId() == null) {
             asiakasRepository.save(tilaus.getAsiakas());
         }
+
+        tilaus.edit();
 
         tilausRepository.save(tilaus);
         return "redirect:/tilausList";
