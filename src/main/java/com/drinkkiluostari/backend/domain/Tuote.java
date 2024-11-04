@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
@@ -25,10 +26,12 @@ public class Tuote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 1, max = 100, message = "Nimen pitää olla 1-100 merkkiä pitkä")
+    @NotEmpty
+    @Size(min = 1, max = 100)
     private String nimi;
 
-    @PositiveOrZero(message = "Hinnan pitää olla 0 tai enemmän")
+    @NotEmpty
+    @PositiveOrZero
     private double hinta;
 
     @JoinColumn(name = "deleted_at")

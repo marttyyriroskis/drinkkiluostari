@@ -12,7 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
@@ -26,17 +26,20 @@ public class Tyontekija {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 1, max = 50, message = "Etunimen pitää olla 1-50 merkkiä pitkä")
+    @NotEmpty
+    @Size(min = 1, max = 50)
     private String etunimi;
     
-    @Size(min = 1, max = 50, message = "Sukunimen pitää olla 1-50 merkkiä pitkä")
+    @NotEmpty
+    @Size(min = 1, max = 50)
     private String sukunimi;
     
-    @Size(min = 1, max = 100, message = "Sähköpostin pitää olla 1-100 merkkiä pitkä")
+    @NotEmpty
+    @Size(min = 1, max = 100)
     @Column(name = "sahkoposti", unique = true)
     private String sahkoposti;
 
-    @NotNull(message = "Salasana ei saa olla tyhjä")
+    @NotEmpty
     private String salasana;
     
     @JoinColumn(name = "deleted_at")

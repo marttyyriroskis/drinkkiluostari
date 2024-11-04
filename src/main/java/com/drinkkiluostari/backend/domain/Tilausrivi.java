@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.PositiveOrZero;
 
 import com.drinkkiluostari.backend.dto.TilausriviDTO;
@@ -18,13 +19,16 @@ public class Tilausrivi {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @PositiveOrZero(message = "Hinnan pitää olla 0 tai enemmän")
+    @NotEmpty
+    @PositiveOrZero
     private double hinta;
     
-    @PositiveOrZero(message = "Alennuksen pitää olla 0 tai enemmän")
+    @NotEmpty
+    @PositiveOrZero
     private double alennus;
 
-    @PositiveOrZero(message = "Määrän pitää olla 0 tai enemmän")
+    @NotEmpty
+    @PositiveOrZero
     private int maara;
 
     @ManyToOne

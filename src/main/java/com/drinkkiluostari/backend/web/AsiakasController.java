@@ -8,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +22,6 @@ import com.drinkkiluostari.backend.repository.TilausRepository;
 import jakarta.validation.Valid;
 
 @Controller
-@Validated
 public class AsiakasController {
     private final AsiakasRepository asiakasRepository;
     private final PostinumeroRepository postinumeroRepository;
@@ -41,7 +39,7 @@ public class AsiakasController {
         List<Asiakas> asiakkaat = asiakasRepository.findAllActive();
         asiakkaat.sort(Comparator.comparing(Asiakas::getId));
         model.addAttribute("asiakkaat", asiakkaat);
-        return "/asiakasList";
+        return "asiakasList";
     }
 
     // Add new asiakas
@@ -50,39 +48,39 @@ public class AsiakasController {
         model.addAttribute("asiakas", new Asiakas());
         model.addAttribute("postinumerot", postinumeroRepository.findAll());
         model.addAttribute("tilaukset", tilausRepository.findAllActive());
-        return "/asiakasNew";
+        return "asiakasNew";
     }
 
     // Save a new asiakas
     @PostMapping("/asiakasSave")
-    public String saveAsiakas(@Valid @ModelAttribute("asiakas") Asiakas asiakas, BindingResult bindingResult, Model model) {
+    public String saveAsiakas(@Valid Asiakas asiakas, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("asiakasEdit", asiakas);
             model.addAttribute("postinumerot", postinumeroRepository.findAll());
             model.addAttribute("tilaukset", tilausRepository.findAllActive());
-            return "/asiakasNew";
+            return "asiakasNew";
         }
         asiakasRepository.save(asiakas);
-        return "redirect:/asiakasList";
+        return "redirect:asiakasList";
     }
 
     // Edit asiakas
     @GetMapping("/asiakasEdit/{id}")
-    public String editAsiakas(@PathVariable("id") Long id, Model model) {
+    public String editAsiakas(@PathVariable Long id, Model model) {
         model.addAttribute("asiakasEdit", asiakasRepository.findByIdActive(id));
         model.addAttribute("postinumerot", postinumeroRepository.findAll());
         model.addAttribute("tilaukset", tilausRepository.findAllActive());
-        return "/asiakasEdit";
+        return "asiakasEdit";
     }
 
     // Save an edited asiakas
     @PostMapping("/asiakasSaveEdited")
-    public String saveEditedAsiakas(@Valid @ModelAttribute("asiakas") Asiakas asiakas, BindingResult bindingResult, Model model) {
+    public String saveEditedAsiakas(@Valid @ModelAttribute("asiakasEdit") Asiakas asiakas, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("asiakasEdit", asiakas);
             model.addAttribute("postinumerot", postinumeroRepository.findAll());
             model.addAttribute("tilaukset", tilausRepository.findAllActive());
-            return "/asiakasEdit";
+            return "asiakasEdit";
         }
 
         if (asiakas.getPostinumero() != null && asiakas.getPostinumero().getId() == null) {
@@ -90,20 +88,20 @@ public class AsiakasController {
         }
 
         asiakasRepository.save(asiakas);
-        return "redirect:/asiakasList";
+        return "redirect:asiakasList";
     }
 
     // Delete asiakas
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/asiakasDelete/{id}")
-    public String deleteAsiakas(@PathVariable("id") Long id, Model model) {
+    public String deleteAsiakas(@PathVariable Long id, Model model) {
         Asiakas asiakas = asiakasRepository.findByIdActive(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Asiakas not found"));
 
         asiakas.delete();
 
         asiakasRepository.save(asiakas);
-        return "redirect:/asiakasList";
+        return "redirect:asiakasList";
     }
 
 }

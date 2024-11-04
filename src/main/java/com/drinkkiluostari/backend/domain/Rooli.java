@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
@@ -21,7 +22,8 @@ public class Rooli {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 1, max = 100, message = "Nimen pitää olla 1-100 merkkiä pitkä")
+    @NotEmpty
+    @Size(min = 1, max = 100)
     private String nimi;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rooli")

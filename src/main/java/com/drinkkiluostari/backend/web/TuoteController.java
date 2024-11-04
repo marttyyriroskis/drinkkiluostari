@@ -8,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +22,6 @@ import com.drinkkiluostari.backend.repository.TilausriviRepository;
 import jakarta.validation.Valid;
 
 @Controller
-@Validated
 public class TuoteController {
     private final TuoteRepository tuoteRepository;
     private final KategoriaRepository kategoriaRepository;
@@ -41,7 +39,7 @@ public class TuoteController {
         List<Tuote> tuotteet = tuoteRepository.findAllActive();
         tuotteet.sort(Comparator.comparing(Tuote::getId));
         model.addAttribute("tuotteet", tuotteet);
-        return "/tuoteList";
+        return "tuoteList";
     }
 
     // Add new tuote
@@ -51,42 +49,42 @@ public class TuoteController {
         model.addAttribute("tuote", new Tuote());
         model.addAttribute("kategoriat", kategoriaRepository.findAll());
         model.addAttribute("tilausrivit", tilausriviRepository.findAll());
-        return "/tuoteNew";
+        return "tuoteNew";
     }
 
     // Save a new tuote
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tuoteSave")
-    public String saveTuote(@Valid @ModelAttribute("tuote") Tuote tuote, BindingResult bindingResult, Model model) {
+    public String saveTuote(@Valid Tuote tuote, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("tuoteEdit", tuote);
             model.addAttribute("kategoriat", kategoriaRepository.findAll());
             model.addAttribute("tilausrivit", tilausriviRepository.findAll());
-            return "/tuoteNew";
+            return "tuoteNew";
         }
         tuoteRepository.save(tuote);
-        return "redirect:/tuoteList";
+        return "redirect:tuoteList";
     }
 
     // Edit tuote
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tuoteEdit/{id}")
-    public String editTuote(@PathVariable("id") Long id, Model model) {
+    public String editTuote(@PathVariable Long id, Model model) {
         model.addAttribute("tuoteEdit", tuoteRepository.findByIdActive(id));
         model.addAttribute("kategoriat", kategoriaRepository.findAll());
         model.addAttribute("tilausrivit", tilausriviRepository.findAll());
-        return "/tuoteEdit";
+        return "tuoteEdit";
     }
 
     // Save an edited tuote
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tuoteSaveEdited")
-    public String saveEditedTuote(@Valid @ModelAttribute("tuote") Tuote tuote, BindingResult bindingResult, Model model) {
+    public String saveEditedTuote(@Valid @ModelAttribute("tuoteEdit") Tuote tuote, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("tuoteEdit", tuote);
             model.addAttribute("kategoriat", kategoriaRepository.findAll());
             model.addAttribute("tilausrivit", tilausriviRepository.findAll());
-            return "/tuoteEdit";
+            return "tuoteEdit";
         }
 
         if (tuote.getKategoria() != null && tuote.getKategoria().getId() == null) {
@@ -94,20 +92,20 @@ public class TuoteController {
         }
 
         tuoteRepository.save(tuote);
-        return "redirect:/tuoteList";
+        return "redirect:tuoteList";
     }
 
     // Delete tuote
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tuoteDelete/{id}")
-    public String deleteTuote(@PathVariable("id") Long id, Model model) {
+    public String deleteTuote(@PathVariable Long id, Model model) {
         Tuote tuote = tuoteRepository.findByIdActive(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tuote not found"));
         
         tuote.delete();
 
         tuoteRepository.save(tuote);
-        return "redirect:/tuoteList";
+        return "redirect:tuoteList";
     }
 
 }

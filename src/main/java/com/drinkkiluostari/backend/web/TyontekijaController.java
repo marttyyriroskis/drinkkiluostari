@@ -8,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +22,6 @@ import com.drinkkiluostari.backend.repository.TyontekijaRepository;
 import jakarta.validation.Valid;
 
 @Controller
-@Validated
 public class TyontekijaController {
     private final TyontekijaRepository tyontekijaRepository;
     private final RooliRepository rooliRepository;
@@ -41,7 +39,7 @@ public class TyontekijaController {
         List<Tyontekija> tyontekijat = tyontekijaRepository.findAllActive();
         tyontekijat.sort(Comparator.comparing(Tyontekija::getId));
         model.addAttribute("tyontekijat", tyontekijat);
-        return "/tyontekijaList";
+        return "tyontekijaList";
     }
 
     // Add new työntekijä
@@ -51,42 +49,42 @@ public class TyontekijaController {
         model.addAttribute("tyontekija", new Tyontekija());
         model.addAttribute("roolit", rooliRepository.findAll());
         model.addAttribute("tilaukset", tilausRepository.findAllActive());
-        return "/tyontekijaNew";
+        return "tyontekijaNew";
     }
 
     // Save a new työntekijä
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tyontekijaSave")
-    public String saveTyontekija(@Valid @ModelAttribute("tyontekija") Tyontekija tyontekija, BindingResult bindingResult, Model model) {
+    public String saveTyontekija(@Valid Tyontekija tyontekija, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("tyontekijaEdit", tyontekija);
             model.addAttribute("roolit", rooliRepository.findAll());
             model.addAttribute("tilaukset", tilausRepository.findAllActive());
-            return "/tyontekijaNew";
+            return "tyontekijaNew";
         }
         tyontekijaRepository.save(tyontekija);
-        return "redirect:/tyontekijaList";
+        return "redirect:tyontekijaList";
     }
 
     // Edit työntekijä
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tyontekijaEdit/{id}")
-    public String editTyontekija(@PathVariable("id") Long id, Model model) {
+    public String editTyontekija(@PathVariable Long id, Model model) {
         model.addAttribute("tyontekijaEdit", tyontekijaRepository.findByIdActive(id));
         model.addAttribute("roolit", rooliRepository.findAll());
         model.addAttribute("tilaukset", tilausRepository.findAllActive());
-        return "/tyontekijaEdit";
+        return "tyontekijaEdit";
     }
 
     // Save an edited työntekijä
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tyontekijaSaveEdited")
-    public String saveEditedTyontekija(@Valid @ModelAttribute("tyontekija") Tyontekija tyontekija, BindingResult bindingResult, Model model) {
+    public String saveEditedTyontekija(@Valid @ModelAttribute("tyontekijaEdit") Tyontekija tyontekija, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("tyontekijaEdit", tyontekija);
             model.addAttribute("roolit", rooliRepository.findAll());
             model.addAttribute("tilaukset", tilausRepository.findAllActive());
-            return "/tyontekijaEdit";
+            return "tyontekijaEdit";
         }
 
         if (tyontekija.getRooli() != null && tyontekija.getRooli().getId() == null) {
@@ -94,20 +92,20 @@ public class TyontekijaController {
         }
 
         tyontekijaRepository.save(tyontekija);
-        return "redirect:/tyontekijaList";
+        return "redirect:tyontekijaList";
     }
 
     // Delete työntekijä
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/tyontekijaDelete/{id}")
-    public String deleteTyontekija(@PathVariable("id") Long id, Model model) {
+    public String deleteTyontekija(@PathVariable Long id, Model model) {
         Tyontekija tyontekija = tyontekijaRepository.findByIdActive(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tyontekija not found"));
         
         tyontekija.delete();
 
         tyontekijaRepository.save(tyontekija);
-        return "redirect:/tyontekijaList";
+        return "redirect:tyontekijaList";
     }
 
 }

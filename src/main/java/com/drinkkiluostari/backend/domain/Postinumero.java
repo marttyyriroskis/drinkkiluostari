@@ -9,7 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
@@ -22,10 +22,11 @@ public class Postinumero {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Postinumero ei saa olla tyhjä")
+    @NotEmpty
     private String postinumero;
     
-    @Size(min = 1, max = 100, message = "Postitoimipaikan pitää olla 1-100 merkkiä pitkä")
+    @NotEmpty
+    @Size(min = 1, max = 100)
     private String postitoimipaikka;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postinumero")
