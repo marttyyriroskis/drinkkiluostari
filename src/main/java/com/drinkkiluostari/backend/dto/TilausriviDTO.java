@@ -1,18 +1,18 @@
 package com.drinkkiluostari.backend.dto;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
 public record TilausriviDTO(
-    @NotEmpty
+    @NotNull
     @PositiveOrZero(message = "Hinnan pitää olla 0 tai enemmän")
     double hinta,
     
-    @NotEmpty
+    @NotNull
     @PositiveOrZero(message = "Alennuksen pitää olla 0 tai enemmän")
     double alennus,
     
-    @NotEmpty
+    @NotNull
     @PositiveOrZero(message = "Määrän pitää olla 0 tai enemmän")
     int maara,
     
