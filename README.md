@@ -22,5 +22,5 @@ in the database.
 
 Requests made to this project are validated using Jakarta Bean Validation. It
 contains several features outside the scope of the Backend course, namely: the
-Soft Delete implementation; DTO classes; a GlobalExceptionHandler; the usage of
-ResponseEntities in the REST controllers; and custom .css styling.
+Soft Delete implementation; DTO classes; the usage of ResponseEntities in the
+REST controllers; and custom .css styling.
