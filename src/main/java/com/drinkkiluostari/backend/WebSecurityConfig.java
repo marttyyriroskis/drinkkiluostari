@@ -48,7 +48,8 @@ public class WebSecurityConfig {
             .permitAll()
         )
         .logout(logout -> logout
-            .permitAll()
+            .permitAll())
+        .csrf(csrf -> csrf.disable()
         );
         return http.build();
     }

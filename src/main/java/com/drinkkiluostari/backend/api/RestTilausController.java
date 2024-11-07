@@ -22,6 +22,7 @@ import com.drinkkiluostari.backend.domain.Asiakas;
 import com.drinkkiluostari.backend.repository.AsiakasRepository;
 import com.drinkkiluostari.backend.domain.Tyontekija;
 import com.drinkkiluostari.backend.dto.TilausDTO;
+import com.drinkkiluostari.backend.dto.CreateTilausDTO;
 import com.drinkkiluostari.backend.repository.TyontekijaRepository;
 
 import jakarta.validation.Valid;
@@ -61,7 +62,7 @@ public class RestTilausController {
     
     // Post a new tilaus
     @PostMapping
-    public ResponseEntity<TilausDTO> newTilaus(@Valid @RequestBody TilausDTO tilausDTO) {
+    public ResponseEntity<CreateTilausDTO> newTilaus(@Valid @RequestBody TilausDTO tilausDTO) {
         Tyontekija tyontekija = tyontekijaRepository.findById(tilausDTO.tyontekija().id())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Tyontekija not found"));
 
@@ -74,9 +75,14 @@ public class RestTilausController {
         tilaus.setTyontekija(tyontekija);
         tilaus.setAsiakas(asiakas);
 
-        tilausRepository.save(tilaus);
+        Tilaus savedTilaus = tilausRepository.save(tilaus);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(tilaus.toDTO());
+        CreateTilausDTO newTilaus = new CreateTilausDTO(
+                savedTilaus.getPvm(),
+                savedTilaus.getTyontekija().toDTO(),
+                savedTilaus.getAsiakas().toDTO());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(newTilaus);
     }
     
     // Edit tilaus
@@ -101,7 +107,7 @@ public class RestTilausController {
     }
 
     // Delete tilaus
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Tilaus> deleteTilaus(@PathVariable Long id) {
         Tilaus tilaus = tilausRepository.findByIdActive(id)

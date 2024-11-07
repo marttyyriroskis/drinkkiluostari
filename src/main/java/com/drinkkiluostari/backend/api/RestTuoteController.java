@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import com.drinkkiluostari.backend.domain.Kategoria;
 import com.drinkkiluostari.backend.domain.Tuote;
+import com.drinkkiluostari.backend.dto.CreateTuoteDTO;
 import com.drinkkiluostari.backend.dto.TuoteDTO;
 import com.drinkkiluostari.backend.repository.KategoriaRepository;
 import com.drinkkiluostari.backend.repository.TuoteRepository;
@@ -56,9 +57,9 @@ public class RestTuoteController {
     }
     
     // Post a new tuote
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    public ResponseEntity<TuoteDTO> newTuote(@Valid @RequestBody TuoteDTO tuoteDTO) {
+    public ResponseEntity<CreateTuoteDTO> newTuote(@Valid @RequestBody TuoteDTO tuoteDTO) {
         Kategoria kategoria = kategoriaRepository.findById(tuoteDTO.kategoria().id())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Kategoria not found"));
 
@@ -67,13 +68,18 @@ public class RestTuoteController {
         tuote.setHinta(tuoteDTO.hinta());
         tuote.setKategoria(kategoria);
 
-        tuoteRepository.save(tuote);
+        Tuote savedTuote = tuoteRepository.save(tuote);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(tuote.toDTO());
+        CreateTuoteDTO newTuote = new CreateTuoteDTO(
+                savedTuote.getNimi(),
+                savedTuote.getHinta(),
+                savedTuote.getKategoria().toDTO());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(newTuote);
     }
     
     // Edit tuote
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<TuoteDTO> editTuote(@Valid @RequestBody TuoteDTO tuoteDTO, @PathVariable Long id) {
         Tuote tuote = tuoteRepository.findByIdActive(id)
@@ -92,7 +98,7 @@ public class RestTuoteController {
     }
 
     // Delete tuote
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Tuote> deleteTuote(@PathVariable Long id) {
         Tuote tuote = tuoteRepository.findByIdActive(id)

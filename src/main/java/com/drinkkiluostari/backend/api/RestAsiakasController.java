@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.drinkkiluostari.backend.domain.Asiakas;
 import com.drinkkiluostari.backend.dto.AsiakasDTO;
+import com.drinkkiluostari.backend.dto.CreateAsiakasDTO;
 import com.drinkkiluostari.backend.repository.AsiakasRepository;
 import com.drinkkiluostari.backend.domain.Postinumero;
 import com.drinkkiluostari.backend.repository.PostinumeroRepository;
@@ -57,7 +58,7 @@ public class RestAsiakasController {
     
     // Post a new asiakas
     @PostMapping
-    public ResponseEntity<AsiakasDTO> newAsiakas(@Valid @RequestBody AsiakasDTO asiakasDTO) {
+    public ResponseEntity<CreateAsiakasDTO> newAsiakas(@Valid @RequestBody AsiakasDTO asiakasDTO) {
         Postinumero postinumero = postinumeroRepository.findById(asiakasDTO.postinumero().id())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Postinumero not found"));
 
@@ -67,9 +68,16 @@ public class RestAsiakasController {
         asiakas.setyTunnus(asiakasDTO.yTunnus());
         asiakas.setPostinumero(postinumero);
 
-        asiakasRepository.save(asiakas);
+        Asiakas savedAsiakas = asiakasRepository.save(asiakas);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(asiakas.toDTO());
+        CreateAsiakasDTO newAsiakas = new CreateAsiakasDTO(
+                savedAsiakas.getId(),
+                savedAsiakas.getNimi(),
+                savedAsiakas.getKatuosoite(),
+                savedAsiakas.getyTunnus(),
+                savedAsiakas.getPostinumero().toDTO());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(newAsiakas);
     }
     
     // Edit asiakas
@@ -92,7 +100,7 @@ public class RestAsiakasController {
     }
 
     // Delete asiakas
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Asiakas> deleteAsiakas(@PathVariable Long id) {
         Asiakas asiakas = asiakasRepository.findByIdActive(id)

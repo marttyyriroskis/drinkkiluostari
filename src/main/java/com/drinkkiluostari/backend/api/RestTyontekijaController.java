@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.drinkkiluostari.backend.domain.Rooli;
 import com.drinkkiluostari.backend.domain.Tyontekija;
+import com.drinkkiluostari.backend.dto.CreateTyontekijaDTO;
 import com.drinkkiluostari.backend.dto.TyontekijaDTO;
 import com.drinkkiluostari.backend.repository.RooliRepository;
 import com.drinkkiluostari.backend.repository.TyontekijaRepository;
@@ -56,25 +57,34 @@ public class RestTyontekijaController {
     }
     
     // Post a new tyontekija
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    public ResponseEntity<TyontekijaDTO> newTyontekija(@Valid @RequestBody TyontekijaDTO tyontekijaDTO) {
+    public ResponseEntity<CreateTyontekijaDTO> newTyontekija(@Valid @RequestBody TyontekijaDTO tyontekijaDTO) {
         Rooli rooli = rooliRepository.findById(tyontekijaDTO.rooli().id())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Rooli not found"));
 
         Tyontekija tyontekija = new Tyontekija();
         tyontekija.setEtunimi(tyontekijaDTO.etunimi());
         tyontekija.setSukunimi(tyontekijaDTO.sukunimi());
+        tyontekija.setSahkoposti(tyontekijaDTO.sahkoposti());
         tyontekija.setSalasana(tyontekijaDTO.salasana());
         tyontekija.setRooli(rooli);
 
-        tyontekijaRepository.save(tyontekija);
+        Tyontekija savedTyontekija = tyontekijaRepository.save(tyontekija);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(tyontekija.toDTO());
+        CreateTyontekijaDTO newTyontekija = new CreateTyontekijaDTO(
+                savedTyontekija.getId(),
+                savedTyontekija.getEtunimi(),
+                savedTyontekija.getSukunimi(),
+                savedTyontekija.getSahkoposti(),
+                savedTyontekija.getSalasana(),
+                savedTyontekija.getRooli().toDTO());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(newTyontekija);
     }
     
     // Edit tyontekija
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<TyontekijaDTO> editTyontekija(@Valid @RequestBody TyontekijaDTO tyontekijaDTO, @PathVariable Long id) {
         Tyontekija tyontekija = tyontekijaRepository.findByIdActive(id)
@@ -94,7 +104,7 @@ public class RestTyontekijaController {
     }
 
     // Delete tyontekija
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Tyontekija> deleteTyontekija(@PathVariable Long id) {
         Tyontekija tyontekija = tyontekijaRepository.findByIdActive(id)
